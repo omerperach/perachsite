@@ -1,0 +1,10 @@
+---
+title: Plant genomic selection
+author: Omer Perach
+date: '2020-06-15'
+slug: plant-genomic-selection
+categories: []
+tags: []
+description: ''
+topics: []
+---
