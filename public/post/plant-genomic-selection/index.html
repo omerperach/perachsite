@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="generator" content="Hugo 0.72.0" />
 
-  <title>Plant genomic selection &middot; Omer Perach</title>
+  <title>Analyzing Credit Data &middot; Omer Perach</title>
 
     
 
@@ -69,7 +69,7 @@
 <div id="menu">
 
   
-  <a class="pure-menu-heading brand" href="/">My Site</a>
+  <a class="pure-menu-heading brand" href="/">Perach</a>
 
 
   <div class="pure-menu">
@@ -224,7 +224,7 @@
 
 
 <div class="header">
-  <h1>Plant genomic selection</h1>
+  <h1>Analyzing Credit Data</h1>
   <h2></h2>
 </div>
 <div class="content">
@@ -253,7 +253,255 @@
   
 
 
-
+<p>You should install the following packages before running the code in this work:</p>
+<pre class="r"><code>install.packages(&quot;dplyr&quot;)
+install.packages(&quot;pROC&quot;)
+install.packages(&quot;ggplot2&quot;)</code></pre>
+<div id="basic-model-estimate-the-case-with-fico-score-only" class="section level1">
+<h1>Basic model estimate: the case with FICO score only</h1>
+<p>First, we will load the <strong>Assignment_1_data.csv</strong> to R.
+<em>dplyr</em> R library will be used in the process in order to manipulate the data frame.</p>
+<pre class="r"><code>library(dplyr)
+loan_df&lt;-read.csv(&quot;Assignment_1_data.csv&quot;) #Loading the CSV to R
+head(loan_df,5) #Just to see if the data uploaded in the right way</code></pre>
+<pre><code>##   id loan_amnt int_rate grade sub_grade emp_length revol_bal revol_util fico
+## 1  1     17625    18.49     D        D2    3 years     12002       88.9  672
+## 2  2      2800     7.62     A        A3    4 years      3897       73.5  727
+## 3  3      5375    15.31     C        C2    3 years      6070       38.4  682
+## 4  4     20000    14.09     B        B5   &lt; 1 year     12174       49.9  702
+## 5  5     10000    12.12     B        B3  10+ years     13547       88.6  707
+##   home_ownership annual_inc verification_status loan_status default
+## 1           RENT      45000            Verified  Fully Paid    Paid
+## 2           RENT      44500        Not Verified  Fully Paid    Paid
+## 3            OWN      22880            Verified  Fully Paid    Paid
+## 4           RENT      95000            Verified  Fully Paid    Paid
+## 5           RENT      68000        Not Verified  Fully Paid    Paid</code></pre>
+<ol style="list-style-type: decimal">
+<li>We will add another column to the data set with dummy variables , <strong>defaulted</strong> will be 1 and <strong>Paid</strong> will be 0.</li>
+</ol>
+<pre class="r"><code>new_loan_df&lt;-mutate(loan_df,new_default=ifelse(loan_df$default==&quot;Defaulted&quot;,1,0)) #creating one more column under the name new_default which assign 0 to paid and 1 to default.
+head(new_loan_df,4)</code></pre>
+<pre><code>##   id loan_amnt int_rate grade sub_grade emp_length revol_bal revol_util fico
+## 1  1     17625    18.49     D        D2    3 years     12002       88.9  672
+## 2  2      2800     7.62     A        A3    4 years      3897       73.5  727
+## 3  3      5375    15.31     C        C2    3 years      6070       38.4  682
+## 4  4     20000    14.09     B        B5   &lt; 1 year     12174       49.9  702
+##   home_ownership annual_inc verification_status loan_status default new_default
+## 1           RENT      45000            Verified  Fully Paid    Paid           0
+## 2           RENT      44500        Not Verified  Fully Paid    Paid           0
+## 3            OWN      22880            Verified  Fully Paid    Paid           0
+## 4           RENT      95000            Verified  Fully Paid    Paid           0</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Logistic regression model the probability of default given <em>Fico</em> score. <em>Fico</em> score definition: “is best known for producing the most widely used consumer credit scores that financial institutions use in deciding whether to lend money or issue credit” (Investopedia). <em>Fico</em> range between 350 to 850, the coefficient sign will be minus, as <em>Fico</em> score goes up the probability to default goes down. It is important to know that there is no linear relationship between <em>Fico</em> score and the probability to default. Every <em>Fico</em> score need to be calculated based on the model parameters to get the probability to default.</li>
+</ol>
+<pre class="r"><code>plot(new_loan_df$fico,new_loan_df$new_default,xlab = &quot;Fico score&quot;,ylab = &quot;Paid or Default&quot;)</code></pre>
+<p><img src="/post/2020-06-15-plant-genomic-selection_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>log_regression_fico&lt;-glm(new_default~fico,data = new_loan_df,family = binomial)
+summary(log_regression_fico)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = new_default ~ fico, family = binomial, data = new_loan_df)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -0.7259  -0.6441  -0.5698  -0.4430   2.6000  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  7.681073   0.755259   10.17   &lt;2e-16 ***
+## fico        -0.013414   0.001092  -12.29   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 8869.3  on 9999  degrees of freedom
+## Residual deviance: 8694.0  on 9998  degrees of freedom
+## AIC: 8698
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<pre class="r"><code>coef(log_regression_fico)</code></pre>
+<pre><code>## (Intercept)        fico 
+##  7.68107344 -0.01341421</code></pre>
+<p>3.As you can see the Intercept is <strong>7.681</strong> and the <em>fico</em> coefficient is <strong>-0.0134</strong>.<em>Fico</em> score has a significant explanatory factor, p value under <strong>0.05</strong>.
+From the first graph you can notice that in general, as <em>fico</em> score goes up more people tend not to pay.</p>
+</div>
+<div id="model-evaluation" class="section level1">
+<h1>Model evaluation</h1>
+<p>Using <strong>pROC</strong> library we will create the <strong>ROC</strong> curve.</p>
+<pre class="r"><code>library(pROC)
+roc(new_loan_df$new_default,log_regression_fico$fitted.values,plot = TRUE,legacy.axes=TRUE,xlab=&quot;False Positive Percentage&quot;,ylab=&quot;True Positive Percentage&quot;,print.auc=TRUE,percent = TRUE) #this line of code is to produce the ROC curve</code></pre>
+<p><img src="/post/2020-06-15-plant-genomic-selection_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre><code>## 
+## Call:
+## roc.default(response = new_loan_df$new_default, predictor = log_regression_fico$fitted.values,     percent = TRUE, plot = TRUE, legacy.axes = TRUE, xlab = &quot;False Positive Percentage&quot;,     ylab = &quot;True Positive Percentage&quot;, print.auc = TRUE)
+## 
+## Data: log_regression_fico$fitted.values in 8377 controls (new_loan_df$new_default 0) &lt; 1623 cases (new_loan_df$new_default 1).
+## Area under the curve: 59.81%</code></pre>
+<p>The area under the curve is 0.5981, the area is greater than 0.5.</p>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>We will set the 10% probability for default threshold and create confusion matrix</li>
+</ol>
+<pre class="r"><code>predict_vector&lt;-predict(log_regression_fico,type = &quot;response&quot;) 
+glm.pred&lt;-rep(0,10000) #create vector with 10000 zero (10000zero is like 10000 No default)
+glm.pred[predict_vector&gt;0.1]=1 #taking the glm.predict and for each probability above 10% assign 1 (1 is like Defaulted) 
+table(glm.pred,new_loan_df$new_default) #confusion matrix </code></pre>
+<pre><code>##         
+## glm.pred    0    1
+##        0 1095   89
+##        1 7282 1534</code></pre>
+<p>We create a confusion matrix:
+The proportion of mistakenly rejected consumers (predicted as default but actually paid from the ones that paid) is 0.8692849.
+The proportion of correctly defaulted consumers (predicted as default and indeed default from the people that default) is 0.9451633.</p>
+</div>
+<div id="with-slightly-richer-data" class="section level1">
+<h1>With slightly richer data</h1>
+<p>The variables that should be transformed to factor in R from the mentioned variables are <em>detailed credit grade</em> and <em>employment verification</em>. But in the data frame R is already consider them to be factor variables. We will only replace <em>employment verification</em> to be two groups - non-verified and everything else (non-verified =1, else=0)</p>
+<pre class="r"><code>loan_multiple_log &lt;- new_loan_df %&gt;% group_by(sub_grade) %&gt;% mutate(nobs=n()) 
+loan_multiple_log$sub_grade&lt;-reorder(loan_multiple_log$sub_grade, -loan_multiple_log$nobs)
+levels(loan_multiple_log$sub_grade)</code></pre>
+<pre><code>##  [1] &quot;B3&quot; &quot;B4&quot; &quot;B2&quot; &quot;C1&quot; &quot;B1&quot; &quot;B5&quot; &quot;C2&quot; &quot;A5&quot; &quot;A4&quot; &quot;C3&quot; &quot;C4&quot; &quot;D1&quot; &quot;D2&quot; &quot;A3&quot; &quot;C5&quot;
+## [16] &quot;A1&quot; &quot;D3&quot; &quot;A2&quot; &quot;D4&quot; &quot;D5&quot; &quot;E2&quot; &quot;E1&quot; &quot;E3&quot; &quot;E4&quot; &quot;E5&quot; &quot;F1&quot; &quot;F3&quot; &quot;F2&quot; &quot;F4&quot; &quot;G1&quot;
+## [31] &quot;G2&quot; &quot;F5&quot; &quot;G5&quot;</code></pre>
+<pre class="r"><code>loan_multiple_log&lt;-mutate(new_loan_df,employment_ver_dummy=ifelse(new_loan_df$verification_status==&quot;Not Verified&quot;,1,0)) #addind column to the data base of one=not verified, else =0
+head(loan_multiple_log) #only to check if it worked</code></pre>
+<pre><code>##   id loan_amnt int_rate grade sub_grade emp_length revol_bal revol_util fico
+## 1  1     17625    18.49     D        D2    3 years     12002       88.9  672
+## 2  2      2800     7.62     A        A3    4 years      3897       73.5  727
+## 3  3      5375    15.31     C        C2    3 years      6070       38.4  682
+## 4  4     20000    14.09     B        B5   &lt; 1 year     12174       49.9  702
+## 5  5     10000    12.12     B        B3  10+ years     13547       88.6  707
+## 6  6     20000    18.49     D        D2  10+ years     23178       87.8  677
+##   home_ownership annual_inc verification_status loan_status default new_default
+## 1           RENT      45000            Verified  Fully Paid    Paid           0
+## 2           RENT      44500        Not Verified  Fully Paid    Paid           0
+## 3            OWN      22880            Verified  Fully Paid    Paid           0
+## 4           RENT      95000            Verified  Fully Paid    Paid           0
+## 5           RENT      68000        Not Verified  Fully Paid    Paid           0
+## 6       MORTGAGE      60000            Verified  Fully Paid    Paid           0
+##   employment_ver_dummy
+## 1                    0
+## 2                    1
+## 3                    0
+## 4                    0
+## 5                    1
+## 6                    0</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = new_default ~ fico + loan_amnt + int_rate + sub_grade + 
+##     revol_bal + employment_ver_dummy, family = binomial, data = loan_multiple_log)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.1934  -0.6379  -0.5533  -0.4118   2.5769  
+## 
+## Coefficients:
+##                        Estimate Std. Error z value Pr(&gt;|z|)   
+## (Intercept)          -7.809e-01  1.287e+00  -0.607  0.54398   
+## fico                 -2.248e-03  1.475e-03  -1.524  0.12760   
+## loan_amnt            -2.101e-06  4.107e-06  -0.512  0.60893   
+## int_rate             -9.319e-02  9.231e-02  -1.010  0.31271   
+## sub_gradeA2          -4.988e-02  4.238e-01  -0.118  0.90631   
+## sub_gradeA3           7.080e-01  3.802e-01   1.862  0.06260 . 
+## sub_gradeA4           8.152e-01  3.746e-01   2.176  0.02956 * 
+## sub_gradeA5           9.053e-01  4.273e-01   2.119  0.03413 * 
+## sub_gradeB1           1.316e+00  4.872e-01   2.702  0.00689 **
+## sub_gradeB2           1.371e+00  5.610e-01   2.444  0.01452 * 
+## sub_gradeB3           1.747e+00  6.391e-01   2.733  0.00628 **
+## sub_gradeB4           1.788e+00  7.172e-01   2.492  0.01268 * 
+## sub_gradeB5           2.144e+00  7.886e-01   2.719  0.00655 **
+## sub_gradeC1           2.007e+00  8.219e-01   2.442  0.01461 * 
+## sub_gradeC2           2.207e+00  8.970e-01   2.460  0.01388 * 
+## sub_gradeC3           2.601e+00  9.451e-01   2.752  0.00593 **
+## sub_gradeC4           2.614e+00  9.919e-01   2.635  0.00841 **
+## sub_gradeC5           2.601e+00  1.071e+00   2.428  0.01519 * 
+## sub_gradeD1           2.798e+00  1.124e+00   2.489  0.01280 * 
+## sub_gradeD2           2.891e+00  1.190e+00   2.428  0.01518 * 
+## sub_gradeD3           3.064e+00  1.223e+00   2.505  0.01224 * 
+## sub_gradeD4           3.263e+00  1.258e+00   2.595  0.00947 **
+## sub_gradeD5           3.233e+00  1.330e+00   2.431  0.01505 * 
+## sub_gradeE1           3.500e+00  1.400e+00   2.501  0.01239 * 
+## sub_gradeE2           2.953e+00  1.443e+00   2.046  0.04075 * 
+## sub_gradeE3           2.762e+00  1.510e+00   1.829  0.06734 . 
+## sub_gradeE4           2.967e+00  1.586e+00   1.871  0.06136 . 
+## sub_gradeE5           3.608e+00  1.643e+00   2.196  0.02811 * 
+## sub_gradeF1           3.700e+00  1.686e+00   2.194  0.02824 * 
+## sub_gradeF2           4.309e+00  1.747e+00   2.467  0.01363 * 
+## sub_gradeF3           3.466e+00  1.791e+00   1.935  0.05293 . 
+## sub_gradeF4          -8.940e+00  2.677e+02  -0.033  0.97336   
+## sub_gradeF5          -8.887e+00  5.354e+02  -0.017  0.98676   
+## sub_gradeG1           4.703e+00  2.337e+00   2.012  0.04417 * 
+## sub_gradeG2          -8.985e+00  3.786e+02  -0.024  0.98107   
+## sub_gradeG5          -9.042e+00  5.354e+02  -0.017  0.98653   
+## revol_bal             1.133e-06  9.845e-07   1.151  0.24980   
+## employment_ver_dummy -1.500e-02  5.899e-02  -0.254  0.79932   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 8869.3  on 9999  degrees of freedom
+## Residual deviance: 8525.4  on 9962  degrees of freedom
+## AIC: 8601.4
+## 
+## Number of Fisher Scoring iterations: 12</code></pre>
+<pre><code>##          (Intercept)                 fico            loan_amnt 
+##        -7.808947e-01        -2.247923e-03        -2.101344e-06 
+##             int_rate          sub_gradeA2          sub_gradeA3 
+##        -9.319442e-02        -4.988157e-02         7.079689e-01 
+##          sub_gradeA4          sub_gradeA5          sub_gradeB1 
+##         8.151579e-01         9.053256e-01         1.316347e+00 
+##          sub_gradeB2          sub_gradeB3          sub_gradeB4 
+##         1.371108e+00         1.746601e+00         1.787740e+00 
+##          sub_gradeB5          sub_gradeC1          sub_gradeC2 
+##         2.143986e+00         2.006986e+00         2.206848e+00 
+##          sub_gradeC3          sub_gradeC4          sub_gradeC5 
+##         2.600532e+00         2.613798e+00         2.601122e+00 
+##          sub_gradeD1          sub_gradeD2          sub_gradeD3 
+##         2.798020e+00         2.890547e+00         3.064440e+00 
+##          sub_gradeD4          sub_gradeD5          sub_gradeE1 
+##         3.263211e+00         3.233399e+00         3.500311e+00 
+##          sub_gradeE2          sub_gradeE3          sub_gradeE4 
+##         2.952968e+00         2.761600e+00         2.966595e+00 
+##          sub_gradeE5          sub_gradeF1          sub_gradeF2 
+##         3.608298e+00         3.699685e+00         4.308719e+00 
+##          sub_gradeF3          sub_gradeF4          sub_gradeF5 
+##         3.465906e+00        -8.940223e+00        -8.886938e+00 
+##          sub_gradeG1          sub_gradeG2          sub_gradeG5 
+##         4.702808e+00        -8.985002e+00        -9.041814e+00 
+##            revol_bal employment_ver_dummy 
+##         1.133040e-06        -1.499731e-02</code></pre>
+<p>The only variable which have significant power to differentiate between Paid and Default is the detailed grade variable and specifically sub_grade C3.</p>
+<p>Producing ROC curve to this model:</p>
+<pre class="r"><code>roc1&lt;-roc(loan_multiple_log$new_default,multiple_log_regression$fitted.values,legacy.axes=TRUE,xlab=&quot;False Positive Percentage&quot;,ylab=&quot;True Positive Percentage&quot;,print.auc=TRUE,col=&quot;#377eb8&quot;,percent = TRUE,plot = TRUE)</code></pre>
+<pre><code>## Setting levels: control = 0, case = 1</code></pre>
+<pre><code>## Setting direction: controls &lt; cases</code></pre>
+<p><img src="/post/2020-06-15-plant-genomic-selection_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>roc2&lt;-roc(new_loan_df$new_default,log_regression_fico$fitted.values,percent=TRUE,print.auc=TRUE,col=&quot;#4daf4a&quot;,lwd=4,xlab=&quot;False Positive Percentage&quot;,ylab=&quot;True Positive Percentage&quot;,legacy.axes=TRUE,plot = TRUE)</code></pre>
+<pre><code>## Setting levels: control = 0, case = 1
+## Setting direction: controls &lt; cases</code></pre>
+<p><img src="/post/2020-06-15-plant-genomic-selection_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<pre class="r"><code>plot(roc1,legacy.axes=TRUE,xlab=&quot;False Positive Percentage&quot;,ylab=&quot;True Positive Percentage&quot;,col=&quot;#377eb8&quot;,percent=TRUE)
+plot(roc2,add=TRUE)</code></pre>
+<p><img src="/post/2020-06-15-plant-genomic-selection_files/figure-html/unnamed-chunk-9-3.png" width="672" />
+The area under the curve with this model is greater than the first model. It means that the multiple logistic model regression that taking into account many variables is able to distinguish between Paid and defaulted in 64% chance and the logistic regression model with only <em>Fico</em> can do it with almost 59.8%, which is less.</p>
+</div>
+<div id="other-ways-to-produce-the-roc-curves" class="section level1">
+<h1>Other ways to produce the ROC curves</h1>
+<pre class="r"><code>library(ggplot2)
+prediction_mul&lt;-predict(multiple_log_regression,type=&quot;response&quot;)
+roc_fico_gg&lt;-roc(loan_multiple_log$new_default,predict_vector)</code></pre>
+<pre><code>## Setting levels: control = 0, case = 1</code></pre>
+<pre><code>## Setting direction: controls &lt; cases</code></pre>
+<pre class="r"><code>roc_mul_gg&lt;-roc(loan_multiple_log$new_default,prediction_mul)</code></pre>
+<pre><code>## Setting levels: control = 0, case = 1
+## Setting direction: controls &lt; cases</code></pre>
+<pre class="r"><code>g_fico&lt;-ggroc(roc_fico_gg, alpha=0.5,colour=&quot;red&quot;,size=2,legacy.axes = TRUE)
+g_mul&lt;-ggroc(roc_mul_gg,alpha=0.5,colour=&quot;blue&quot;,size=2,legacy.axes=TRUE)
+g_all&lt;-ggroc(list(fico_log_regression=roc_fico_gg,mul_log_regression=roc_mul_gg),legacy.axes = TRUE)
+g_all+ggtitle(&quot;Two model ROC curves - Log regression - fico and multiple variables&quot;)+geom_segment(aes(x=0,xend=1,y=0,yend=1),color=&quot;grey&quot;,linetype=&quot;dashed&quot;)</code></pre>
+<p><img src="/post/2020-06-15-plant-genomic-selection_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
 
   
   <h4><i class="fa-share-alt" aria-hidden="true"></i>&nbsp;Share!</h4>
@@ -362,6 +610,9 @@
 
 
 
+<script src="/js/math-code.js"></script>
+  <script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  
 
 
 </body>

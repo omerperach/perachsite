@@ -13,12 +13,14 @@
     
     
     <item>
-      <title>Plant genomic selection</title>
+      <title>Analyzing Credit Data</title>
       <link>/post/plant-genomic-selection/</link>
       <pubDate>Mon, 15 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/plant-genomic-selection/</guid>
-      <description></description>
+      <description>You should install the following packages before running the code in this work:
+install.packages(&amp;quot;dplyr&amp;quot;)install.packages(&amp;quot;pROC&amp;quot;)install.packages(&amp;quot;ggplot2&amp;quot;)Basic model estimate: the case with FICO score onlyFirst, we will load the Assignment_1_data.csv to R.dplyr R library will be used in the process in order to manipulate the data frame.
+library(dplyr)loan_df&amp;lt;-read.csv(&amp;quot;Assignment_1_data.csv&amp;quot;) #Loading the CSV to Rhead(loan_df,5) #Just to see if the data uploaded in the right way## id loan_amnt int_rate grade sub_grade emp_length revol_bal revol_util fico## 1 1 17625 18.</description>
     </item>
     
     <item>

@@ -1,5 +1,5 @@
 ---
-title: Plant genomic selection
+title: Analyzing Credit Data 
 author: Omer Perach
 date: '2020-06-15'
 slug: plant-genomic-selection
@@ -8,3 +8,95 @@ tags: []
 description: ''
 topics: []
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+You should install the following packages before running the code in this work:
+```{r, eval=FALSE,echo=TRUE}
+install.packages("dplyr")
+install.packages("pROC")
+install.packages("ggplot2")
+```
+# Basic model estimate: the case with FICO score only
+First, we will load the **Assignment_1_data.csv** to R.
+*dplyr* R library will be used in the process in order to manipulate the data frame. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(dplyr)
+loan_df<-read.csv("Assignment_1_data.csv") #Loading the CSV to R
+head(loan_df,5) #Just to see if the data uploaded in the right way
+```
+1. We will add another column to the data set with dummy variables , **defaulted** will be 1 and **Paid** will be 0. 
+```{r echo=TRUE}
+new_loan_df<-mutate(loan_df,new_default=ifelse(loan_df$default=="Defaulted",1,0)) #creating one more column under the name new_default which assign 0 to paid and 1 to default.
+head(new_loan_df,4)
+```
+2. Logistic regression model the probability of default given *Fico* score. *Fico* score definition: "is best known for producing the most widely used consumer credit scores that financial institutions use in deciding whether to lend money or issue credit" (Investopedia). *Fico* range between 350 to 850, the coefficient sign will be minus, as *Fico* score goes up the probability to default goes down. It is important to know that there is no linear relationship between *Fico* score and the probability to default. Every *Fico* score need to be calculated based on the model parameters to get the probability to default.    
+```{r echo=TRUE}
+plot(new_loan_df$fico,new_loan_df$new_default,xlab = "Fico score",ylab = "Paid or Default")
+log_regression_fico<-glm(new_default~fico,data = new_loan_df,family = binomial)
+summary(log_regression_fico)
+coef(log_regression_fico)
+```
+3.As you can see the Intercept is **7.681** and the *fico* coefficient is **-0.0134**.*Fico* score has a significant explanatory factor, p value under **0.05**.
+From the first graph you can notice that in general, as *fico* score goes up more people tend not to pay. 
+
+# Model evaluation
+Using **pROC** library we will create the **ROC** curve. 
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(pROC)
+roc(new_loan_df$new_default,log_regression_fico$fitted.values,plot = TRUE,legacy.axes=TRUE,xlab="False Positive Percentage",ylab="True Positive Percentage",print.auc=TRUE,percent = TRUE) #this line of code is to produce the ROC curve
+```
+The area under the curve is 0.5981, the area is greater than 0.5.
+
+d) We will set the 10% probability for default threshold and create confusion matrix
+```{r echo=TRUE}
+predict_vector<-predict(log_regression_fico,type = "response") 
+glm.pred<-rep(0,10000) #create vector with 10000 zero (10000zero is like 10000 No default)
+glm.pred[predict_vector>0.1]=1 #taking the glm.predict and for each probability above 10% assign 1 (1 is like Defaulted) 
+table(glm.pred,new_loan_df$new_default) #confusion matrix 
+```
+We create a confusion matrix: 
+The proportion of mistakenly rejected consumers (predicted as default but actually paid from the ones that paid) is `r (7282)/(7282+1095)`. 
+The proportion of correctly defaulted consumers (predicted as default and indeed default from the people that default) is `r (1534)/(89+1534)`.
+
+# With slightly richer data
+
+The variables that should be transformed to factor in R from the mentioned variables are *detailed credit grade* and *employment verification*. But in the data frame R is already consider them to be factor variables. We will only replace *employment verification* to be two groups - non-verified and everything else (non-verified =1, else=0)  
+```{r echo=TRUE}
+loan_multiple_log <- new_loan_df %>% group_by(sub_grade) %>% mutate(nobs=n()) 
+loan_multiple_log$sub_grade<-reorder(loan_multiple_log$sub_grade, -loan_multiple_log$nobs)
+levels(loan_multiple_log$sub_grade)
+loan_multiple_log<-mutate(new_loan_df,employment_ver_dummy=ifelse(new_loan_df$verification_status=="Not Verified",1,0)) #addind column to the data base of one=not verified, else =0
+head(loan_multiple_log) #only to check if it worked
+```
+```{r}
+multiple_log_regression<-glm(new_default~fico+loan_amnt+int_rate+sub_grade+revol_bal+employment_ver_dummy,data =loan_multiple_log,family=binomial)
+summary(multiple_log_regression)
+coef(multiple_log_regression)
+```
+The only variable which have significant power to differentiate between Paid and Default is the detailed grade variable and specifically sub_grade C3.  
+
+Producing ROC curve to this model:
+```{r echo=TRUE}
+roc1<-roc(loan_multiple_log$new_default,multiple_log_regression$fitted.values,legacy.axes=TRUE,xlab="False Positive Percentage",ylab="True Positive Percentage",print.auc=TRUE,col="#377eb8",percent = TRUE,plot = TRUE)
+roc2<-roc(new_loan_df$new_default,log_regression_fico$fitted.values,percent=TRUE,print.auc=TRUE,col="#4daf4a",lwd=4,xlab="False Positive Percentage",ylab="True Positive Percentage",legacy.axes=TRUE,plot = TRUE)
+plot(roc1,legacy.axes=TRUE,xlab="False Positive Percentage",ylab="True Positive Percentage",col="#377eb8",percent=TRUE)
+plot(roc2,add=TRUE)
+```
+The area under the curve with this model is greater than the first model. It means that the multiple logistic model regression that taking into account many variables is able to distinguish between Paid and defaulted in 64% chance and the logistic regression model with only *Fico* can do it with almost 59.8%, which is less.
+
+# Other ways to produce the ROC curves
+
+```{r echo=TRUE}
+library(ggplot2)
+prediction_mul<-predict(multiple_log_regression,type="response")
+roc_fico_gg<-roc(loan_multiple_log$new_default,predict_vector)
+roc_mul_gg<-roc(loan_multiple_log$new_default,prediction_mul)
+g_fico<-ggroc(roc_fico_gg, alpha=0.5,colour="red",size=2,legacy.axes = TRUE)
+g_mul<-ggroc(roc_mul_gg,alpha=0.5,colour="blue",size=2,legacy.axes=TRUE)
+g_all<-ggroc(list(fico_log_regression=roc_fico_gg,mul_log_regression=roc_mul_gg),legacy.axes = TRUE)
+g_all+ggtitle("Two model ROC curves - Log regression - fico and multiple variables")+geom_segment(aes(x=0,xend=1,y=0,yend=1),color="grey",linetype="dashed")
+```
+
