@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="generator" content="Hugo 0.72.0" />
+
+  <title>RFM Modeling &middot; Omer Perach</title>
+
+    
+
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css">
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="/css/side-menu.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="/css/blackburn.css">
+
+  
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+ 
+  
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/androidstudio.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+
+  
+  
+
+</head>
+
+
+<body>
+<div id="layout">
+
+  
+<a href="#menu" id="menuLink" class="menu-link">
+  
+  <span></span>
+</a>
+<div id="menu">
+
+  
+  <a class="pure-menu-heading brand" href="/">Perach</a>
+
+
+  <div class="pure-menu">
+    <ul class="pure-menu-list">
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="/"><i class='fa fa-home fa-fw'></i>Home</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="/about/"><i class='fa fa-user fa-fw'></i>About</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="/contact/"><i class='fa fa-phone fa-fw'></i>Contact</a>
+      
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="pure-menu social">
+  <ul class="pure-menu-list">
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://twitter.com/OmerPerach" rel="me" target="_blank"><i class="fab fa-twitter-square fa-fw"></i>Twitter</a>
+    </li>
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://facebook.com/Omer%20Perach" rel="me" target="_blank"><i class="fab fa-facebook-square fa-fw"></i>Facebook</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://instagram.com/*" rel="me" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://linkedin.com/in/Omer%20Perach" rel="me" target="_blank"><i class="fab fa-linkedin"></i></i>LinkedIn</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://github.com/omerperach" rel="me" target="_blank"><i class="fab fa-github-square fa-fw"></i>GitHub</a>
+    </li>
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://stackoverflow.com/users/*" rel="me" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Stack Overflow</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  </ul>
+</div>
+
+
+  <div>
+  <div class="small-print">
+    <small>&copy; 2016. All rights reserved.</small>
+  </div>
+  <div class="small-print">
+    <small>Built with&nbsp;<a href="https://gohugo.io/" target="_blank">Hugo</a></small>
+    <small>Theme&nbsp;<a href="https://github.com/yoshiharuyamashita/blackburn" target="_blank">Blackburn</a></small>
+  </div>
+</div>
+
+</div>
+
+
+  <div id="main">
+
+
+<div class="header">
+  <h1>RFM Modeling</h1>
+  <h2></h2>
+</div>
+<div class="content">
+
+  <div class="post-meta">
+
+  <div>
+    <i class="fa fa-calendar fa-fw"></i>
+    <time>15 Jun 2020, 00:00</time>
+  </div>
+
+  
+
+  
+  
+  
+  
+
+  
+  
+  
+  
+
+</div>
+
+  
+
+
+<div id="rfm-analysis---introduction" class="section level2">
+<h2>RFM analysis - Introduction</h2>
+<p>RFM helps to identify customers who are more likely to respond to promotions by segmenting them into various categories.
+We will use the <strong>rfm</strong> package. We will read the csv file <em>RFM_data.csv</em> and calculate RFM scores for each customer.
+The data include 39999 observations of:
+1. Customer I.D
+2. Recencency Days
+3. Number of Orders
+4. Total Revenue
+5. Most Recent Visit <em>Will not be used</em>
+Four bins will be used for <strong>recency</strong>, <strong>frequency</strong> and <strong>monetary</strong>. In addition, we will present some graphs to see the recency, frequency and monetary scores for the customers.
+In the end, we will divide our customers into 11 categories of customers.</p>
+<div id="rfm-table" class="section level5">
+<h5>RFM Table</h5>
+<p>In the following steps we used the following <a href="https://rfm.rsquaredacademy.com/articles/rfm-customer-level-data.html">reference</a>.</p>
+<pre class="r"><code>df&lt;-read.csv(&quot;RFM_data.csv&quot;,header = T)
+head(df)</code></pre>
+<pre><code>##   customer_id recency_days number_of_orders revenue most_recent_visit
+## 1       22086          232                9     777        14/05/2020
+## 2        2290          115               16    1555        08/09/2020
+## 3       26377           43                5     336        19/11/2020
+## 4       24650           64               12    1189        29/10/2020
+## 5       12883           23               12    1229        09/12/2020
+## 6        2119           72               11     929        21/10/2020</code></pre>
+<pre class="r"><code>nrow(df)</code></pre>
+<pre><code>## [1] 39999</code></pre>
+<pre class="r"><code>df$most_recent_visit&lt;-as.Date(df$most_recent_visit, format=&quot;%d/%m/%y&quot;)
+head(df)</code></pre>
+<pre><code>##   customer_id recency_days number_of_orders revenue most_recent_visit
+## 1       22086          232                9     777        2020-05-14
+## 2        2290          115               16    1555        2020-09-08
+## 3       26377           43                5     336        2020-11-19
+## 4       24650           64               12    1189        2020-10-29
+## 5       12883           23               12    1229        2020-12-09
+## 6        2119           72               11     929        2020-10-21</code></pre>
+<pre class="r"><code>analysis_date &lt;- lubridate::as_date(&quot;2020-03-21&quot;, tz = &quot;UTC&quot;)</code></pre>
+<pre><code>## Warning: `tz` argument is ignored by `as_date()`</code></pre>
+<pre class="r"><code>rfm_score&lt;-rfm_table_customer(data = df,customer_id = customer_id,n_transactions =number_of_orders,recency_days = recency_days,total_revenue = revenue,analysis_date = analysis_date,recency_bins = 4,frequency_bins =4, monetary_bins = 4)
+rfm_score[1:10,]</code></pre>
+<pre><code>##    customer_id recency_days transaction_count amount recency_score
+## 1        22086          232                 9    777             2
+## 2         2290          115                16   1555             3
+## 3        26377           43                 5    336             4
+## 4        24650           64                12   1189             4
+## 5        12883           23                12   1229             4
+## 6         2119           72                11    929             4
+## 7        31283          112                17   1569             3
+## 8        33815          142                11    778             3
+## 9        15972           43                 9    641             4
+## 10       27650          131                10    970             3
+##    frequency_score monetary_score rfm_score
+## 1                2              2       222
+## 2                4              4       344
+## 3                1              1       411
+## 4                3              4       434
+## 5                3              4       434
+## 6                3              3       433
+## 7                4              4       344
+## 8                3              2       332
+## 9                2              1       421
+## 10               2              3       323</code></pre>
+</div>
+<div id="exploratory-data-analysis-of-rfm-table" class="section level5">
+<h5>Exploratory Data Analysis of RFM Table</h5>
+<pre class="r"><code>rfm_heatmap(rfm_score) #combination of recency vs frequency colored by monetary</code></pre>
+<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>rfm_bar_chart(rfm_score) #same concept but in bar graph</code></pre>
+<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<pre class="r"><code>rfm_order_dist(rfm_score) # Number of customers per orders</code></pre>
+<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-3-3.png" width="672" />
+##### Continuous graphs</p>
+<pre class="r"><code>rfm_fm_plot(rfm_score) #Frequency vs monetary</code></pre>
+<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>rfm_rm_plot(rfm_score) #Recency ve monetary</code></pre>
+<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre class="r"><code>rfm_rf_plot(rfm_score) #Recency vs frequency</code></pre>
+<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
+</div>
+<div id="segments" class="section level5">
+<h5>Segments</h5>
+<p>In the following section we are following this [reference] (<a href="https://medium.com/@triimamwicaksono_47213/customer-segmentation-and-strategy-using-rfm-analysis-in-rstudio-be79118c8235" class="uri">https://medium.com/@triimamwicaksono_47213/customer-segmentation-and-strategy-using-rfm-analysis-in-rstudio-be79118c8235</a>) in order to classify our customers into the below segment defenitions:<br />
+1. Champions
+2. Loyal Customers
+3. Potential Loyalist
+4. Recent Customers
+5. Promising
+6. Customers Needing Attention
+7. About to Sleep
+8. At Risk
+9. Can’t Lose Them
+10. Hibernating
+11.Lost</p>
+<pre class="r"><code>champions&lt;- c(444)
+loyal_customers &lt;- c(334, 342, 343, 344, 433, 434, 443)
+potential_loyalist &lt;-c(332,333,341,412,413,414,431,432,441,442,421,422,423,424)
+recent_customers &lt;- c(411)
+promising &lt;- c(311, 312, 313, 331)
+needing_attention &lt;- c(212,213,214,231,232,233,241,314,321,322,323,324)
+about_to_sleep &lt;- c(211)
+at_risk &lt;- c(112,113,114,131,132,133,142,124,123,122,121,224,223,222,221)
+cant_lose &lt;- c(134,143,144,234,242,243,244)
+hibernating &lt;- c(141)
+lost &lt;- c(111)
+rfm_scores&lt;-as.vector(rfm_score$rfm$rfm_score)
+rfm_scores[which(rfm_score$rfm$rfm_score %in% champions)]=&quot;Champions&quot;
+rfm_scores[which(rfm_scores %in% potential_loyalist)] = &quot;Potential Loyalist&quot;
+rfm_scores[which(rfm_scores %in% loyal_customers)] = &quot;Loyal Customers&quot;
+rfm_scores[which(rfm_scores %in% recent_customers)] = &quot;Recent Customers&quot;
+rfm_scores[which(rfm_scores %in% promising)] = &quot;Promising&quot;
+rfm_scores[which(rfm_scores %in% needing_attention)] = &quot;Customer Needing Attention&quot;
+rfm_scores[which(rfm_scores %in% about_to_sleep)] = &quot;About to Sleep&quot;
+rfm_scores[which(rfm_scores %in% at_risk)] = &quot;At Risk&quot;
+rfm_scores[which(rfm_scores %in% cant_lose)] = &quot;Can&#39;t Lose Them&quot;
+rfm_scores[which(rfm_scores %in% hibernating)] = &quot;Hibernating&quot;
+rfm_scores[which(rfm_scores %in% lost)] = &quot;Lost&quot;
+customer_sement&lt;-data.frame(cus_seg=rfm_scores)
+customer_sement%&gt;%count(cus_seg)%&gt;%arrange(desc(n))%&gt;%rename(cus_seg = cus_seg, Count = n)</code></pre>
+<pre><code>##                       cus_seg Count
+## 1                     At Risk  7718
+## 2             Loyal Customers  5643
+## 3          Potential Loyalist  5440
+## 4  Customer Needing Attention  5331
+## 5             Can&#39;t Lose Them  3886
+## 6                        Lost  3558
+## 7                   Promising  2751
+## 8                   Champions  2140
+## 9              About to Sleep  2096
+## 10           Recent Customers  1435
+## 11                Hibernating     1</code></pre>
+<pre class="r"><code>ggplot(data = customer_sement) + aes(x = cus_seg, fill = cus_seg)+ geom_bar() + labs(title = &quot;Customer Segmentation&quot;, x = &quot;Segment&quot;, y = &quot;Total Customer&quot;) + coord_flip()+ theme_minimal()</code></pre>
+<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+Finally I think it will be best to add the classification into the <strong>df</strong> data frame we start from:</p>
+<pre class="r"><code>df&lt;-df%&gt;%mutate(Segment_name=customer_sement$cus_seg)
+head(df)</code></pre>
+<pre><code>##   customer_id recency_days number_of_orders revenue most_recent_visit
+## 1       22086          232                9     777        2020-05-14
+## 2        2290          115               16    1555        2020-09-08
+## 3       26377           43                5     336        2020-11-19
+## 4       24650           64               12    1189        2020-10-29
+## 5       12883           23               12    1229        2020-12-09
+## 6        2119           72               11     929        2020-10-21
+##       Segment_name
+## 1          At Risk
+## 2  Loyal Customers
+## 3 Recent Customers
+## 4  Loyal Customers
+## 5  Loyal Customers
+## 6  Loyal Customers</code></pre>
+</div>
+</div>
+
+  
+  <h4><i class="fa-share-alt" aria-hidden="true"></i>&nbsp;Share!</h4>
+<ul class="share-buttons">
+	<li><a href="https://www.facebook.com/sharer/sharer.php?u=%2fpost%2frfm-modeling%2f" target="_blank" title="Share on Facebook"><i class="fa-facebook" aria-hidden="true"></i><span class="sr-only">Share on Facebook</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="https://twitter.com/intent/tweet?source=%2fpost%2frfm-modeling%2f&via=HorribleGeek" target="_blank" title="Tweet"><i class="fa-twitter" aria-hidden="true"></i><span class="sr-only">Tweet</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="https://plus.google.com/share?url=%2fpost%2frfm-modeling%2f" target="_blank" title="Share on Google+"><i class="fa-google-plus" aria-hidden="true"></i><span class="sr-only">Share on Google+</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://www.tumblr.com/share?v=3&u=%2fpost%2frfm-modeling%2f" target="_blank" title="Post to Tumblr"><i class="fa-tumblr" aria-hidden="true"></i><span class="sr-only">Post to Tumblr</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://pinterest.com/pin/create/button/?url=%2fpost%2frfm-modeling%2f" target="_blank" title="Pin it"><i class="fa-pinterest-p" aria-hidden="true"></i><span class="sr-only">Pin it</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://www.reddit.com/submit?url=%2fpost%2frfm-modeling%2f" target="_blank" title="Submit to Reddit"><i class="fa-reddit-alien" aria-hidden="true"></i><span class="sr-only">Submit to Reddit</span></a>
+	</li>
+</ul>
+
+
+<style>
+	ul.share-buttons{
+	  list-style: none;
+	  padding: 0;
+	}
+
+	ul.share-buttons li{
+	  display: inline;
+	}
+
+	ul.share-buttons .sr-only{
+	  position: absolute;
+	  clip: rect(1px 1px 1px 1px);
+	  clip: rect(1px, 1px, 1px, 1px);
+	  padding: 0;
+	  border: 0;
+	  height: 1px;
+	  width: 1px;
+	  overflow: hidden;
+	}
+</style>
+
+
+  
+<div class="prev-next-post pure-g">
+  <div class="pure-u-1-24" style="text-align: left;">
+    
+  </div>
+  <div class="pure-u-10-24">
+    
+  </div>
+  <div class="pure-u-2-24">
+    &nbsp;
+  </div>
+  <div class="pure-u-10-24">
+    
+    <nav class="next">
+      <a href="/post/plant-genomic-selection/">Analyzing Credit Data</a>
+    </nav>
+    
+  </div>
+  <div class="pure-u-1-24" style="text-align: right;">
+    
+    <a href="/post/plant-genomic-selection/"><i class="fa fa-chevron-right"></i></a>
+    
+  </div>
+</div>
+
+
+
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'Your Disqus shortname';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+</div>
+
+</div>
+</div>
+<script src="/js/ui.js"></script>
+<script src="/js/menus.js"></script>
+
+
+<script>
+  
+  if (window.location.hostname != "localhost") {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'Your Google Analytics tracking ID', 'auto');
+    ga('send', 'pageview');
+  }
+</script>
+
+
+
+
+
+<script src="/js/math-code.js"></script>
+  <script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  
+
+
+</body>
+</html>
+

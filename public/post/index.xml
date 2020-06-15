@@ -24,12 +24,12 @@ library(dplyr)loan_df&amp;lt;-read.csv(&amp;quot;Assignment_1_data.csv&amp;quot
     </item>
     
     <item>
-      <title>RFM Model </title>
-      <link>/post/rfm-model/</link>
+      <title>RFM Modeling</title>
+      <link>/post/rfm-modeling/</link>
       <pubDate>Mon, 15 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/post/rfm-model/</guid>
-      <description></description>
+      <guid>/post/rfm-modeling/</guid>
+      <description>RFM analysis - IntroductionRFM helps to identify customers who are more likely to respond to promotions by segmenting them into various categories.We will use the rfm package. We will read the csv file RFM_data.csv and calculate RFM scores for each customer.The data include 39999 observations of:1. Customer I.D2. Recencency Days3. Number of Orders4. Total Revenue5. Most Recent Visit Will not be usedFour bins will be used for recency, frequency and monetary.</description>
     </item>
     
   </channel>

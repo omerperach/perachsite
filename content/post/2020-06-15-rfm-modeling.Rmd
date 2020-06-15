@@ -1,8 +1,8 @@
 ---
-title: 'RFM Model '
+title: RFM Modeling
 author: Omer Perach
 date: '2020-06-15'
-slug: rfm-model
+slug: rfm-modeling
 categories: []
 tags: []
 description: ''
