@@ -1,0 +1,108 @@
+---
+title: 'RFM Model '
+author: Omer Perach
+date: '2020-06-15'
+slug: rfm-model
+categories: []
+tags: []
+description: ''
+topics: []
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## RFM analysis  - Introduction
+RFM helps to identify customers who are more likely to respond to promotions by segmenting them into various categories.
+We will use the **rfm** package. We will read the csv file *RFM_data.csv* and calculate RFM scores for each customer.
+The data include 39999 observations of:
+1. Customer I.D
+2. Recencency Days
+3. Number of Orders
+4. Total Revenue
+5. Most Recent Visit *Will not be used*
+Four bins will be used for **recency**, **frequency** and **monetary**. In addition, we will present some graphs to see the recency, frequency and monetary scores for the customers.
+In the end, we will divide our customers into 11 categories of customers.
+
+##### RFM Table
+
+In the following steps we used the following [reference](https://rfm.rsquaredacademy.com/articles/rfm-customer-level-data.html).
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(rfm)
+library(lubridate)
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+```
+```{r echo=TRUE}
+df<-read.csv("RFM_data.csv",header = T)
+head(df)
+nrow(df)
+df$most_recent_visit<-as.Date(df$most_recent_visit, format="%d/%m/%y")
+head(df)
+analysis_date <- lubridate::as_date("2020-03-21", tz = "UTC")
+rfm_score<-rfm_table_customer(data = df,customer_id = customer_id,n_transactions =number_of_orders,recency_days = recency_days,total_revenue = revenue,analysis_date = analysis_date,recency_bins = 4,frequency_bins =4, monetary_bins = 4)
+rfm_score[1:10,]
+```
+##### Exploratory Data Analysis of RFM Table
+```{r}
+rfm_heatmap(rfm_score) #combination of recency vs frequency colored by monetary
+rfm_bar_chart(rfm_score) #same concept but in bar graph
+rfm_order_dist(rfm_score) # Number of customers per orders
+```
+##### Continuous graphs 
+```{r}
+rfm_fm_plot(rfm_score) #Frequency vs monetary
+rfm_rm_plot(rfm_score) #Recency ve monetary
+rfm_rf_plot(rfm_score) #Recency vs frequency
+```
+
+##### Segments
+In the following section we are following this [reference] (https://medium.com/@triimamwicaksono_47213/customer-segmentation-and-strategy-using-rfm-analysis-in-rstudio-be79118c8235) in order to classify our customers into the below segment defenitions:  
+1. Champions
+2. Loyal Customers
+3. Potential Loyalist
+4. Recent Customers
+5. Promising
+6. Customers Needing Attention
+7. About to Sleep
+8. At Risk
+9. Can't Lose Them
+10. Hibernating
+11.Lost
+
+```{r echo=TRUE}
+champions<- c(444)
+loyal_customers <- c(334, 342, 343, 344, 433, 434, 443)
+potential_loyalist <-c(332,333,341,412,413,414,431,432,441,442,421,422,423,424)
+recent_customers <- c(411)
+promising <- c(311, 312, 313, 331)
+needing_attention <- c(212,213,214,231,232,233,241,314,321,322,323,324)
+about_to_sleep <- c(211)
+at_risk <- c(112,113,114,131,132,133,142,124,123,122,121,224,223,222,221)
+cant_lose <- c(134,143,144,234,242,243,244)
+hibernating <- c(141)
+lost <- c(111)
+rfm_scores<-as.vector(rfm_score$rfm$rfm_score)
+rfm_scores[which(rfm_score$rfm$rfm_score %in% champions)]="Champions"
+rfm_scores[which(rfm_scores %in% potential_loyalist)] = "Potential Loyalist"
+rfm_scores[which(rfm_scores %in% loyal_customers)] = "Loyal Customers"
+rfm_scores[which(rfm_scores %in% recent_customers)] = "Recent Customers"
+rfm_scores[which(rfm_scores %in% promising)] = "Promising"
+rfm_scores[which(rfm_scores %in% needing_attention)] = "Customer Needing Attention"
+rfm_scores[which(rfm_scores %in% about_to_sleep)] = "About to Sleep"
+rfm_scores[which(rfm_scores %in% at_risk)] = "At Risk"
+rfm_scores[which(rfm_scores %in% cant_lose)] = "Can't Lose Them"
+rfm_scores[which(rfm_scores %in% hibernating)] = "Hibernating"
+rfm_scores[which(rfm_scores %in% lost)] = "Lost"
+customer_sement<-data.frame(cus_seg=rfm_scores)
+customer_sement%>%count(cus_seg)%>%arrange(desc(n))%>%rename(cus_seg = cus_seg, Count = n)
+ggplot(data = customer_sement) + aes(x = cus_seg, fill = cus_seg)+ geom_bar() + labs(title = "Customer Segmentation", x = "Segment", y = "Total Customer") + coord_flip()+ theme_minimal()
+```
+Finally I think it will be best to add the classification into the **df** data frame we start from:
+```{r}
+df<-df%>%mutate(Segment_name=customer_sement$cus_seg)
+head(df)
+```

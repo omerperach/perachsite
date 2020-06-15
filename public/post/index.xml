@@ -23,5 +23,14 @@ install.packages(&amp;quot;dplyr&amp;quot;)install.packages(&amp;quot;pROC&amp;
 library(dplyr)loan_df&amp;lt;-read.csv(&amp;quot;Assignment_1_data.csv&amp;quot;) #Loading the CSV to Rhead(loan_df,5) #Just to see if the data uploaded in the right way## id loan_amnt int_rate grade sub_grade emp_length revol_bal revol_util fico## 1 1 17625 18.</description>
     </item>
     
+    <item>
+      <title>RFM Model </title>
+      <link>/post/rfm-model/</link>
+      <pubDate>Mon, 15 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/rfm-model/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>
