@@ -14,7 +14,7 @@ ignoreFiles=["\\.Rmd$","\\.Rmarkdown$","_files$","_cache$"]
 
 [params]
   # Shown in the home page
-  subtitle = "My World"
+  subtitle = "Plant Science and Precision Agriculture"
   brand = "My Site"
   googleAnalytics = "Your Google Analytics tracking ID"
   disqus = "Your Disqus shortname"
