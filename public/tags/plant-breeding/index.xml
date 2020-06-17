@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Plant Breeding on Omer Perach</title>
+    <link>/tags/plant-breeding/</link>
+    <description>Recent content in Plant Breeding on Omer Perach</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <lastBuildDate>Wed, 17 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/plant-breeding/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Genomic Selection</title>
+      <link>/post/genomic-selection/</link>
+      <pubDate>Wed, 17 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/genomic-selection/</guid>
+      <description>Hi there, I am excited!!!
+What a beutiful subject to start with.
+Supervised learning is the giant wave, storm, eathquake in almost every digital industry.
+But what about non-tech industry? What about the agriculture and the breeding industries?
+It starting to get warm, at least in the farming industry. A lot of companies aiming to retrieve data from the field such as aerial photography, soil water potential, satelite that can tract field temperature and soil radation.</description>
+    </item>
+    
+  </channel>
+</rss>

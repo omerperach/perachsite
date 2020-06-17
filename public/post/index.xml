@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <lastBuildDate>Mon, 15 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 17 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Genomic Selection</title>
+      <link>/post/genomic-selection/</link>
+      <pubDate>Wed, 17 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/genomic-selection/</guid>
+      <description>Hi there, I am excited!!!
+What a beutiful subject to start with.
+Supervised learning is the giant wave, storm, eathquake in almost every digital industry.
+But what about non-tech industry? What about the agriculture and the breeding industries?
+It starting to get warm, at least in the farming industry. A lot of companies aiming to retrieve data from the field such as aerial photography, soil water potential, satelite that can tract field temperature and soil radation.</description>
+    </item>
     
     <item>
       <title>Analyzing Credit Data</title>
