@@ -3,16 +3,11 @@ title: Genomic Selection
 author: Omer Perach
 date: '2020-06-17'
 slug: genomic-selection
-categories:
-  - Big Data
-  - Plant Science
-tags:
-  - Big Data
-  - Plant Breeding
+categories: []
+tags: []
 description: ''
 topics: []
 ---
-
 Hi there, I am excited!!!
 
 What a beutiful subject to start with.
@@ -34,6 +29,3 @@ Some of the Israeli most interesting companies are: Prospera, Taranis, SeeTree, 
 To be honest, we need to disrupt the gene to phenotype challenge in order to feed 10 the world in the future
 
 How we will do it? you will need to continue reading...
-
-
-
