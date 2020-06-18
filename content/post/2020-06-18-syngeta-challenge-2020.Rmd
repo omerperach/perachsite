@@ -1,0 +1,67 @@
+---
+title: Syngeta Challenge - 2020
+author: Omer Perach
+date: '2020-06-18'
+slug: syngeta-challenge-2020
+categories:
+  - Data Science
+tags:
+  - Plant Breeding
+  - Data Analysis
+description: ''
+topics: []
+---
+
+```{r include=FALSE}
+rm(list=ls())
+library(ggplot2)
+library(devtools)
+library(dplyr)
+library(h2o)
+maize_data_train<-read.csv("CC2020_train_final.csv",header = TRUE)
+```
+#### The Challenge Purpose 
+Commercial corn is one of the most important crops in the world.Every year plant breeders produce new corn products known as hybrids. Those hybrids are the products of crossing two "parents" called inbred. The most demanding and resource consuming procedure is to develop inbreds and subsequently assess the crossing outcome - hybrid - of one inbred to another inbred called 'tester'.
+
+#### The importance of this project
+On 2050 world population will approximately be 10 billion people. In order to feed 10 billion people the agriculture industry need to increase yield by almost 70%. Computational power with statistical abilities can help the breeders to achieve faster increase in yield results with less resources.
+
+#### The Research Question
+Given historical hybrid ("child" hybrid of inbred and tester) performance data across years and locations, how can we create a model to predict/impute the performance of the crossing of any two inbred and tester parents?
+
+#### The data sets Syngenta provided
+Syngenta provided two data sets, the first one for training a statistical model called *CC2020_train_final* and a testing data sets called *CC2020_test_final*.
+
+#### Looking on the data
+
+```{r echo=FALSE}
+summary(maize_data_train)
+```
+##### Variables 
+1. Year - two numbers representing three consecutive years 2016,2017,2018. 
+2. Location - 280 different location where the experiment (crossing tester and inbred) took place.
+3. INBRED - 593 unique inbred lines, meaning corn plants which used to be crossed with tester (other inbred).
+4. INBRED CLUSTER - 14 different genetic "sign". Cluster association for each inbred which denotes genetic "grouping "sign".
+5. TESTER - 496 unique tester lines.
+6. TESTER CLUSTER - 13 genetic different genetic "sign". Cluster association for each inbred which denotes genetic "grouping "sign".
+7. YIELD - The performance of the INBRED and TESTER "child" - hybrid.
+
+Reviewing the data set using the `summary(maize_data_train)` we can start to understand the features of the data sets.  
+Some questions:  
+1. The relevance of YEAR feature - crossing two corn parents at 2016 do not influence any crossing done on 2018 and in addition for future yield prediction we will not want the model to learn the correlation between year and yield. In the following graph you can see box-plot for YIELD year. As we can see the differences are minor between year to year.  
+2. We can see that some INBRED and TESTER have more observations than others INBRED and Tester lines. For example INBRED_3577 appear in 16448 observations while INBRED_3521 in 3202 observations. Do we need to split to test and train accordingly?
+
+**H2O.ai** company developed AI open source infrastructure with strong machine learning algorithms.
+
+##### Model Development Stages
+
+1. House Keeping Models - Distributed Random Forest and Gradient Boosting Machine
+2. Best Effort - Modeling Approach Improvement
+3. Finish - Acceptance test
+
+##### Personal note
+I am coming from molecular biology background where mechanism and causality need to be proved by different methods. In regards to this challenge, I think that Syngenta need to invest in understanding how genes influence yield from the mechanism point of view. It is helpful to use machine in order to be more efficient but the main goal is to connect genes to phenotype. 
+
+### House Keeping Models
+
+The data set provided by Syngenta have 199476 observations. I will split the train data set into 80% that will serve for building the model, a K-fold cross validation will be used. On the other 20% I will test the models accuracy. I will also select out the year column out of the data frame.
