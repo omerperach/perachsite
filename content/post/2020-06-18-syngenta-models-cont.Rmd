@@ -1,0 +1,12 @@
+---
+title: 'Syngenta Models Cont. '
+author: Omer Perach
+date: '2020-06-18'
+slug: syngenta-models-cont
+categories: []
+tags:
+  - Data Science
+  - Plant Breeding
+description: ''
+topics: []
+---
