@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="generator" content="Hugo 0.72.0" />
 
-  <title>RFM Modeling &middot; Omer Perach</title>
+  <title>Syngenta &middot; Omer Perach</title>
 
     
 
@@ -224,7 +224,7 @@
 
 
 <div class="header">
-  <h1>RFM Modeling</h1>
+  <h1>Syngenta</h1>
   <h2></h2>
 </div>
 <div class="content">
@@ -253,155 +253,71 @@
   
 
 
-<div id="rfm-analysis---introduction" class="section level2">
-<h2>RFM analysis - Introduction</h2>
-<p>RFM helps to identify customers who are more likely to respond to promotions by segmenting them into various categories.
-We will use the <strong>rfm</strong> package. We will read the csv file <em>RFM_data.csv</em> and calculate RFM scores for each customer.
-The data include 39999 observations of:
-1. Customer I.D
-2. Recencency Days
-3. Number of Orders
-4. Total Revenue
-5. Most Recent Visit <em>Will not be used</em>
-Four bins will be used for <strong>recency</strong>, <strong>frequency</strong> and <strong>monetary</strong>. In addition, we will present some graphs to see the recency, frequency and monetary scores for the customers.
-In the end, we will divide our customers into 11 categories of customers.</p>
-<div id="rfm-table" class="section level5">
-<h5>RFM Table</h5>
-<p>In the following steps we used the following <a href="https://rfm.rsquaredacademy.com/articles/rfm-customer-level-data.html">reference</a>.</p>
-<pre class="r"><code>df&lt;-read.csv(&quot;RFM_data.csv&quot;,header = T)
-head(df)</code></pre>
-<pre><code>##   customer_id recency_days number_of_orders revenue most_recent_visit
-## 1       22086          232                9     777        14/05/2020
-## 2        2290          115               16    1555        08/09/2020
-## 3       26377           43                5     336        19/11/2020
-## 4       24650           64               12    1189        29/10/2020
-## 5       12883           23               12    1229        09/12/2020
-## 6        2119           72               11     929        21/10/2020</code></pre>
-<pre class="r"><code>nrow(df)</code></pre>
-<pre><code>## [1] 39999</code></pre>
-<pre class="r"><code>df$most_recent_visit&lt;-as.Date(df$most_recent_visit, format=&quot;%d/%m/%y&quot;)
-head(df)</code></pre>
-<pre><code>##   customer_id recency_days number_of_orders revenue most_recent_visit
-## 1       22086          232                9     777        2020-05-14
-## 2        2290          115               16    1555        2020-09-08
-## 3       26377           43                5     336        2020-11-19
-## 4       24650           64               12    1189        2020-10-29
-## 5       12883           23               12    1229        2020-12-09
-## 6        2119           72               11     929        2020-10-21</code></pre>
-<pre class="r"><code>analysis_date &lt;- lubridate::as_date(&quot;2020-03-21&quot;, tz = &quot;UTC&quot;)</code></pre>
-<pre><code>## Warning: `tz` argument is ignored by `as_date()`</code></pre>
-<pre class="r"><code>rfm_score&lt;-rfm_table_customer(data = df,customer_id = customer_id,n_transactions =number_of_orders,recency_days = recency_days,total_revenue = revenue,analysis_date = analysis_date,recency_bins = 4,frequency_bins =4, monetary_bins = 4)
-rfm_score[1:10,]</code></pre>
-<pre><code>##    customer_id recency_days transaction_count amount recency_score
-## 1        22086          232                 9    777             2
-## 2         2290          115                16   1555             3
-## 3        26377           43                 5    336             4
-## 4        24650           64                12   1189             4
-## 5        12883           23                12   1229             4
-## 6         2119           72                11    929             4
-## 7        31283          112                17   1569             3
-## 8        33815          142                11    778             3
-## 9        15972           43                 9    641             4
-## 10       27650          131                10    970             3
-##    frequency_score monetary_score rfm_score
-## 1                2              2       222
-## 2                4              4       344
-## 3                1              1       411
-## 4                3              4       434
-## 5                3              4       434
-## 6                3              3       433
-## 7                4              4       344
-## 8                3              2       332
-## 9                2              1       421
-## 10               2              3       323</code></pre>
+<div id="the-challenge-purpose" class="section level4">
+<h4>The Challenge Purpose</h4>
+<p>Commercial corn is one of the most important crops in the world.Every year plant breeders produce new corn products known as hybrids. Those hybrids are the products of crossing two “parents” called inbred. The most demanding and resource consuming procedure is to develop inbreds and subsequently assess the crossing outcome - hybrid - of one inbred to another inbred called ‘tester’.</p>
 </div>
-<div id="exploratory-data-analysis-of-rfm-table" class="section level5">
-<h5>Exploratory Data Analysis of RFM Table</h5>
-<pre class="r"><code>rfm_heatmap(rfm_score) #combination of recency vs frequency colored by monetary</code></pre>
-<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<pre class="r"><code>rfm_bar_chart(rfm_score) #same concept but in bar graph</code></pre>
-<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
-<pre class="r"><code>rfm_order_dist(rfm_score) # Number of customers per orders</code></pre>
-<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-3-3.png" width="672" />
-##### Continuous graphs</p>
-<pre class="r"><code>rfm_fm_plot(rfm_score) #Frequency vs monetary</code></pre>
-<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<pre class="r"><code>rfm_rm_plot(rfm_score) #Recency ve monetary</code></pre>
-<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
-<pre class="r"><code>rfm_rf_plot(rfm_score) #Recency vs frequency</code></pre>
-<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
+<div id="the-importance-of-this-project" class="section level4">
+<h4>The importance of this project</h4>
+<p>On 2050 world population will approximately be 10 billion people. In order to feed 10 billion people the agriculture industry need to increase yield by almost 70%. Computational power with statistical abilities can help the breeders to achieve faster increase in yield results with less resources.</p>
 </div>
-<div id="segments" class="section level5">
-<h5>Segments</h5>
-<p>In the following section we are following this [reference] (<a href="https://medium.com/@triimamwicaksono_47213/customer-segmentation-and-strategy-using-rfm-analysis-in-rstudio-be79118c8235" class="uri">https://medium.com/@triimamwicaksono_47213/customer-segmentation-and-strategy-using-rfm-analysis-in-rstudio-be79118c8235</a>) in order to classify our customers into the below segment defenitions:<br />
-1. Champions
-2. Loyal Customers
-3. Potential Loyalist
-4. Recent Customers
-5. Promising
-6. Customers Needing Attention
-7. About to Sleep
-8. At Risk
-9. Can’t Lose Them
-10. Hibernating
-11.Lost</p>
-<pre class="r"><code>champions&lt;- c(444)
-loyal_customers &lt;- c(334, 342, 343, 344, 433, 434, 443)
-potential_loyalist &lt;-c(332,333,341,412,413,414,431,432,441,442,421,422,423,424)
-recent_customers &lt;- c(411)
-promising &lt;- c(311, 312, 313, 331)
-needing_attention &lt;- c(212,213,214,231,232,233,241,314,321,322,323,324)
-about_to_sleep &lt;- c(211)
-at_risk &lt;- c(112,113,114,131,132,133,142,124,123,122,121,224,223,222,221)
-cant_lose &lt;- c(134,143,144,234,242,243,244)
-hibernating &lt;- c(141)
-lost &lt;- c(111)
-rfm_scores&lt;-as.vector(rfm_score$rfm$rfm_score)
-rfm_scores[which(rfm_score$rfm$rfm_score %in% champions)]=&quot;Champions&quot;
-rfm_scores[which(rfm_scores %in% potential_loyalist)] = &quot;Potential Loyalist&quot;
-rfm_scores[which(rfm_scores %in% loyal_customers)] = &quot;Loyal Customers&quot;
-rfm_scores[which(rfm_scores %in% recent_customers)] = &quot;Recent Customers&quot;
-rfm_scores[which(rfm_scores %in% promising)] = &quot;Promising&quot;
-rfm_scores[which(rfm_scores %in% needing_attention)] = &quot;Customer Needing Attention&quot;
-rfm_scores[which(rfm_scores %in% about_to_sleep)] = &quot;About to Sleep&quot;
-rfm_scores[which(rfm_scores %in% at_risk)] = &quot;At Risk&quot;
-rfm_scores[which(rfm_scores %in% cant_lose)] = &quot;Can&#39;t Lose Them&quot;
-rfm_scores[which(rfm_scores %in% hibernating)] = &quot;Hibernating&quot;
-rfm_scores[which(rfm_scores %in% lost)] = &quot;Lost&quot;
-customer_sement&lt;-data.frame(cus_seg=rfm_scores)
-customer_sement%&gt;%count(cus_seg)%&gt;%arrange(desc(n))%&gt;%rename(cus_seg = cus_seg, Count = n)</code></pre>
-<pre><code>##                       cus_seg Count
-## 1                     At Risk  7718
-## 2             Loyal Customers  5643
-## 3          Potential Loyalist  5440
-## 4  Customer Needing Attention  5331
-## 5             Can&#39;t Lose Them  3886
-## 6                        Lost  3558
-## 7                   Promising  2751
-## 8                   Champions  2140
-## 9              About to Sleep  2096
-## 10           Recent Customers  1435
-## 11                Hibernating     1</code></pre>
-<pre class="r"><code>ggplot(data = customer_sement) + aes(x = cus_seg, fill = cus_seg)+ geom_bar() + labs(title = &quot;Customer Segmentation&quot;, x = &quot;Segment&quot;, y = &quot;Total Customer&quot;) + coord_flip()+ theme_minimal()</code></pre>
-<p><img src="/post/2020-06-15-rfm-modeling_files/figure-html/unnamed-chunk-5-1.png" width="672" />
-Finally I think it will be best to add the classification into the <strong>df</strong> data frame we start from:</p>
-<pre class="r"><code>df&lt;-df%&gt;%mutate(Segment_name=customer_sement$cus_seg)
-head(df)</code></pre>
-<pre><code>##   customer_id recency_days number_of_orders revenue most_recent_visit
-## 1       22086          232                9     777        2020-05-14
-## 2        2290          115               16    1555        2020-09-08
-## 3       26377           43                5     336        2020-11-19
-## 4       24650           64               12    1189        2020-10-29
-## 5       12883           23               12    1229        2020-12-09
-## 6        2119           72               11     929        2020-10-21
-##       Segment_name
-## 1          At Risk
-## 2  Loyal Customers
-## 3 Recent Customers
-## 4  Loyal Customers
-## 5  Loyal Customers
-## 6  Loyal Customers</code></pre>
+<div id="the-research-question" class="section level4">
+<h4>The Research Question</h4>
+<p>Given historical hybrid (“child” hybrid of inbred and tester) performance data across years and locations, how can we create a model to predict/impute the performance of the crossing of any two inbred and tester parents?</p>
 </div>
+<div id="the-data-sets-syngenta-provided" class="section level4">
+<h4>The data sets Syngenta provided</h4>
+<p>Syngenta provided two data sets, the first one for training a statistical model called <em>CC2020_train_final</em> and a testing data sets called <em>CC2020_test_final</em>.</p>
+</div>
+<div id="looking-on-the-data" class="section level4">
+<h4>Looking on the data</h4>
+<pre><code>##       YEAR         LOCATION            INBRED          INBRED_CLUSTER    
+##  Min.   :16.00   Length:199476      Length:199476      Length:199476     
+##  1st Qu.:17.00   Class :character   Class :character   Class :character  
+##  Median :17.00   Mode  :character   Mode  :character   Mode  :character  
+##  Mean   :17.16                                                           
+##  3rd Qu.:18.00                                                           
+##  Max.   :18.00                                                           
+##     TESTER          TESTER_CLUSTER         YIELD        
+##  Length:199476      Length:199476      Min.   :0.04724  
+##  Class :character   Class :character   1st Qu.:0.94187  
+##  Mode  :character   Mode  :character   Median :1.00328  
+##                                        Mean   :1.00173  
+##                                        3rd Qu.:1.06407  
+##                                        Max.   :1.80008</code></pre>
+<div id="variables" class="section level5">
+<h5>Variables</h5>
+<ol style="list-style-type: decimal">
+<li>Year - two numbers representing three consecutive years 2016,2017,2018.</li>
+<li>Location - 280 different location where the experiment (crossing tester and inbred) took place.</li>
+<li>INBRED - 593 unique inbred lines, meaning corn plants which used to be crossed with tester (other inbred).</li>
+<li>INBRED CLUSTER - 14 different genetic “sign”. Cluster association for each inbred which denotes genetic “grouping”sign".</li>
+<li>TESTER - 496 unique tester lines.</li>
+<li>TESTER CLUSTER - 13 genetic different genetic “sign”. Cluster association for each inbred which denotes genetic “grouping”sign".</li>
+<li>YIELD - The performance of the INBRED and TESTER “child” - hybrid.</li>
+</ol>
+<p>Reviewing the data set using the <code>summary(maize_data_train)</code> we can start to understand the features of the data sets.<br />
+Some questions:<br />
+1. The relevance of YEAR feature - crossing two corn parents at 2016 do not influence any crossing done on 2018 and in addition for future yield prediction we will not want the model to learn the correlation between year and yield. In the following graph you can see box-plot for YIELD year. As we can see the differences are minor between year to year.<br />
+2. We can see that some INBRED and TESTER have more observations than others INBRED and Tester lines. For example INBRED_3577 appear in 16448 observations while INBRED_3521 in 3202 observations. Do we need to split to test and train accordingly?</p>
+<p><strong>H2O.ai</strong> company developed AI open source infrastructure with strong machine learning algorithms.</p>
+</div>
+<div id="model-development-stages" class="section level5">
+<h5>Model Development Stages</h5>
+<ol style="list-style-type: decimal">
+<li>House Keeping Models - Distributed Random Forest and Gradient Boosting Machine</li>
+<li>Best Effort - Modeling Approach Improvement</li>
+<li>Finish - Acceptance test</li>
+</ol>
+</div>
+<div id="personal-note" class="section level5">
+<h5>Personal note</h5>
+<p>I am coming from molecular biology background where mechanism and causality need to be proved by different methods. In regards to this challenge, I think that Syngenta need to invest in understanding how genes influence yield from the mechanism point of view. It is helpful to use machine in order to be more efficient but the main goal is to connect genes to phenotype.</p>
+</div>
+</div>
+<div id="house-keeping-models" class="section level3">
+<h3>House Keeping Models</h3>
+<p>The data set provided by Syngenta have 199476 observations. I will split the train data set into 80% that will serve for building the model, a K-fold cross validation will be used. On the other 20% I will test the models accuracy. I will also select out the year column out of the data frame.</p>
 </div>
 
   
@@ -459,13 +375,13 @@ head(df)</code></pre>
   <div class="pure-u-10-24">
     
     <nav class="next">
-      <a href="/post/plant-genomic-selection/">Analyzing Credit Data</a>
+      <a href="/post/rfm-modeling/">RFM Modeling</a>
     </nav>
     
   </div>
   <div class="pure-u-1-24" style="text-align: right;">
     
-    <a href="/post/plant-genomic-selection/"><i class="fa fa-chevron-right"></i></a>
+    <a href="/post/rfm-modeling/"><i class="fa fa-chevron-right"></i></a>
     
   </div>
 </div>
@@ -517,9 +433,6 @@ head(df)</code></pre>
 
 
 
-<script src="/js/math-code.js"></script>
-  <script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-  
 
 
 </body>

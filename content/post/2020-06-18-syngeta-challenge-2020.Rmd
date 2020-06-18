@@ -1,26 +1,11 @@
 ---
-<<<<<<< HEAD
-title: "Syngeta Challenge - 2020"
-author: "Omer Perach"
-date: '2020-06-18'
-description: ''
-slug: syngeta-challenge-2020
-tags:
-- Plant Breeding
-- Data Analysis
-categories: Data Science
-=======
-title: Syngeta Challenge - 2020
+title: Syngenta
 author: Omer Perach
-date: '2020-06-18'
-slug: syngeta-challenge-2020
-categories:
-  - Data Science
-tags:
-  - Plant Breeding
-  - Data Analysis
+date: '2020-06-15'
+slug: rfm-modeling
+categories: []
+tags: []
 description: ''
->>>>>>> bc342b39e1f5b3d796273920aaed5956061c7706
 topics: []
 ---
 
