@@ -10,3 +10,73 @@ tags:
 description: ''
 topics: []
 ---
+```{r include=FALSE}
+library(ggplot2)
+library(devtools)
+library(dplyr)
+library(h2o)
+maize_data_train<-read.csv("CC2020_train_final.csv",header = TRUE)
+```
+
+```{r echo=TRUE}
+set.seed(42)
+h2o.init()
+df<-h2o.uploadFile("CC2020_train_final.csv")
+df<-df[,-1]
+train_test<-h2o.splitFrame(df,ratios = 0.8)
+df_train<-train_test[[1]]
+nrow(df_train)
+df_test<-train_test[[2]]
+nrow(df_test)
+```
+
+As you can see we divided the training data provided by Syngenta to two data sets, a *df_train* and a *df_test*, the train data set comprise 159591 observations and the test 39885 observations.
+
+#### Training the two house keeping models
+1. Distributed Random Forest 
+2. Gradient Boosting Machine
+
+#### Training the two house keeping models
+1. Distributed Random Forest 
+2. Gradient Boosting Machine
+
+
+#### Distributed Random Forest
+```{r echo=TRUE}
+ran_forest<-h2o.randomForest(model_id = "Random_Forest",x=c("LOCATION","INBRED","INBRED_CLUSTER","TESTER","INBRED","INBRED_CLUSTER","TESTER","TESTER_CLUSTER"),y="YIELD",training_frame = df_train,nfolds = 5,validation_frame = df_test)
+performance_rf<-h2o.performance(ran_forest,df_test)
+performance_rf
+r2_for_tes_rf<-h2o.r2(ran_forest,valid = T)
+r2_for_tes_rf
+#performance of the model on the 20% test set
+```
+
+#### Gradient Boosting Machine
+```{r echo=TRUE}
+ran_gbm<-h2o.gbm(x=c("LOCATION","INBRED","INBRED_CLUSTER","TESTER","INBRED","INBRED_CLUSTER","TESTER","TESTER_CLUSTER"),y="YIELD",training_frame = df_train,nfolds = 5,validation_frame = df_test)
+performance_gbm<-h2o.performance(ran_gbm)
+performance_gbm
+r2_for_tes_gbm<-h2o.r2(ran_gbm,valid = T)
+r2_for_tes_gbm
+```
+
+Now we will compare between the two benchmark by each of the following parameters:
+1. R squared
+2. Mean Squared Error - MSE
+3. Root Mean Squared Error - RMSE
+4. Root mean Squared Logarithmic Error - RMSLE
+5. Mean Absolute Error - MAE
+
+R squared for the Distributed Random Forest model:
+```{r echo=FALSE}
+r2_for_tes_rf
+```
+R squared for the Gradient Boosting Machine:
+```{r echo=FALSE}
+r2_for_tes_gbm
+```
+The R squared of both of the models are low, with random forest model higher by 0.01, let's remember that R squared show us how good the predicted variable fit to a linear relationship, and maybe this is not the relationship in our data. In addition, good models can have low R squared.
+
+The RMSE and the MAE are two parameters which thier units are the same as the predicted units. YIELD values go between 0.047 to 1.08. Random forest RMSE and MAE for the validation set are 0.097 and 0.072 respectively which is not low in regards to the actual predicted units, gardient boosting RMSE and the MAE for the validation set are 0.091 and 0.068 which is less.
+
+I decided to keep on using the gradient boosting machine algorithm becasue the benchmark parameters are better for this model.

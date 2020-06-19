@@ -262,7 +262,376 @@
   
 
 
-
+<pre class="r"><code>set.seed(42)
+h2o.init()</code></pre>
+<pre><code>##  Connection successful!
+## 
+## R is connected to the H2O cluster: 
+##     H2O cluster uptime:         15 minutes 48 seconds 
+##     H2O cluster timezone:       Asia/Jerusalem 
+##     H2O data parsing timezone:  UTC 
+##     H2O cluster version:        3.30.0.1 
+##     H2O cluster version age:    2 months and 15 days  
+##     H2O cluster name:           H2O_started_from_R_Omer_qea893 
+##     H2O cluster total nodes:    1 
+##     H2O cluster total memory:   0.09 GB 
+##     H2O cluster total cores:    4 
+##     H2O cluster allowed cores:  4 
+##     H2O cluster healthy:        TRUE 
+##     H2O Connection ip:          localhost 
+##     H2O Connection port:        54321 
+##     H2O Connection proxy:       NA 
+##     H2O Internal Security:      FALSE 
+##     H2O API Extensions:         Amazon S3, Algos, AutoML, Core V3, TargetEncoder, Core V4 
+##     R Version:                  R version 4.0.0 (2020-04-24)</code></pre>
+<pre class="r"><code>df&lt;-h2o.uploadFile(&quot;CC2020_train_final.csv&quot;)</code></pre>
+<pre><code>## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+<pre class="r"><code>df&lt;-df[,-1]
+train_test&lt;-h2o.splitFrame(df,ratios = 0.8)
+df_train&lt;-train_test[[1]]
+nrow(df_train)</code></pre>
+<pre><code>## [1] 159591</code></pre>
+<pre class="r"><code>df_test&lt;-train_test[[2]]
+nrow(df_test)</code></pre>
+<pre><code>## [1] 39885</code></pre>
+<p>As you can see we divided the training data provided by Syngenta to two data sets, a <em>df_train</em> and a <em>df_test</em>, the train data set comprise 159591 observations and the test 39885 observations.</p>
+<div id="training-the-two-house-keeping-models" class="section level4">
+<h4>Training the two house keeping models</h4>
+<ol style="list-style-type: decimal">
+<li>Distributed Random Forest</li>
+<li>Gradient Boosting Machine</li>
+</ol>
+</div>
+<div id="training-the-two-house-keeping-models-1" class="section level4">
+<h4>Training the two house keeping models</h4>
+<ol style="list-style-type: decimal">
+<li>Distributed Random Forest</li>
+<li>Gradient Boosting Machine</li>
+</ol>
+</div>
+<div id="distributed-random-forest" class="section level4">
+<h4>Distributed Random Forest</h4>
+<pre class="r"><code>ran_forest&lt;-h2o.randomForest(model_id = &quot;Random_Forest&quot;,x=c(&quot;LOCATION&quot;,&quot;INBRED&quot;,&quot;INBRED_CLUSTER&quot;,&quot;TESTER&quot;,&quot;INBRED&quot;,&quot;INBRED_CLUSTER&quot;,&quot;TESTER&quot;,&quot;TESTER_CLUSTER&quot;),y=&quot;YIELD&quot;,training_frame = df_train,nfolds = 5,validation_frame = df_test)</code></pre>
+<pre><code>## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |                                                                      |   1%
+  |                                                                            
+  |=                                                                     |   1%
+  |                                                                            
+  |=                                                                     |   2%
+  |                                                                            
+  |==                                                                    |   3%
+  |                                                                            
+  |===                                                                   |   4%
+  |                                                                            
+  |====                                                                  |   5%
+  |                                                                            
+  |====                                                                  |   6%
+  |                                                                            
+  |=====                                                                 |   7%
+  |                                                                            
+  |=====                                                                 |   8%
+  |                                                                            
+  |======                                                                |   9%
+  |                                                                            
+  |=======                                                               |   9%
+  |                                                                            
+  |=======                                                               |  10%
+  |                                                                            
+  |========                                                              |  11%
+  |                                                                            
+  |========                                                              |  12%
+  |                                                                            
+  |=========                                                             |  13%
+  |                                                                            
+  |==========                                                            |  14%
+  |                                                                            
+  |==========                                                            |  15%
+  |                                                                            
+  |===========                                                           |  15%
+  |                                                                            
+  |===========                                                           |  16%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |=============                                                         |  18%
+  |                                                                            
+  |=============                                                         |  19%
+  |                                                                            
+  |==============                                                        |  20%
+  |                                                                            
+  |==============                                                        |  21%
+  |                                                                            
+  |===============                                                       |  21%
+  |                                                                            
+  |===============                                                       |  22%
+  |                                                                            
+  |================                                                      |  22%
+  |                                                                            
+  |=================                                                     |  24%
+  |                                                                            
+  |=================                                                     |  25%
+  |                                                                            
+  |==================                                                    |  25%
+  |                                                                            
+  |==================                                                    |  26%
+  |                                                                            
+  |===================                                                   |  27%
+  |                                                                            
+  |====================                                                  |  28%
+  |                                                                            
+  |====================                                                  |  29%
+  |                                                                            
+  |=====================                                                 |  29%
+  |                                                                            
+  |=====================                                                 |  30%
+  |                                                                            
+  |=====================                                                 |  31%
+  |                                                                            
+  |======================                                                |  31%
+  |                                                                            
+  |======================                                                |  32%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |========================                                              |  34%
+  |                                                                            
+  |========================                                              |  35%
+  |                                                                            
+  |=========================                                             |  35%
+  |                                                                            
+  |=========================                                             |  36%
+  |                                                                            
+  |==========================                                            |  37%
+  |                                                                            
+  |===========================                                           |  38%
+  |                                                                            
+  |===========================                                           |  39%
+  |                                                                            
+  |============================                                          |  39%
+  |                                                                            
+  |============================                                          |  40%
+  |                                                                            
+  |=============================                                         |  41%
+  |                                                                            
+  |=============================                                         |  42%
+  |                                                                            
+  |==============================                                        |  42%
+  |                                                                            
+  |==============================                                        |  43%
+  |                                                                            
+  |===============================                                       |  44%
+  |                                                                            
+  |================================                                      |  45%
+  |                                                                            
+  |================================                                      |  46%
+  |                                                                            
+  |=================================                                     |  47%
+  |                                                                            
+  |=================================                                     |  48%
+  |                                                                            
+  |==================================                                    |  48%
+  |                                                                            
+  |==================================                                    |  49%
+  |                                                                            
+  |===================================                                   |  49%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |====================================                                  |  51%
+  |                                                                            
+  |====================================                                  |  52%
+  |                                                                            
+  |=====================================                                 |  53%
+  |                                                                            
+  |======================================                                |  54%
+  |                                                                            
+  |======================================                                |  55%
+  |                                                                            
+  |=======================================                               |  55%
+  |                                                                            
+  |=======================================                               |  56%
+  |                                                                            
+  |========================================                              |  57%
+  |                                                                            
+  |========================================                              |  58%
+  |                                                                            
+  |=========================================                             |  58%
+  |                                                                            
+  |=========================================                             |  59%
+  |                                                                            
+  |==========================================                            |  60%
+  |                                                                            
+  |==========================================                            |  61%
+  |                                                                            
+  |===========================================                           |  61%
+  |                                                                            
+  |===========================================                           |  62%
+  |                                                                            
+  |============================================                          |  62%
+  |                                                                            
+  |============================================                          |  63%
+  |                                                                            
+  |=============================================                         |  64%
+  |                                                                            
+  |==============================================                        |  65%
+  |                                                                            
+  |==============================================                        |  66%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |===============================================                       |  68%
+  |                                                                            
+  |================================================                      |  68%
+  |                                                                            
+  |================================================                      |  69%
+  |                                                                            
+  |=================================================                     |  70%
+  |                                                                            
+  |==================================================                    |  71%
+  |                                                                            
+  |==================================================                    |  72%
+  |                                                                            
+  |===================================================                   |  73%
+  |                                                                            
+  |====================================================                  |  74%
+  |                                                                            
+  |=====================================================                 |  75%
+  |                                                                            
+  |=====================================================                 |  76%
+  |                                                                            
+  |======================================================                |  77%
+  |                                                                            
+  |=======================================================               |  78%
+  |                                                                            
+  |=======================================================               |  79%
+  |                                                                            
+  |========================================================              |  80%
+  |                                                                            
+  |========================================================              |  81%
+  |                                                                            
+  |=========================================================             |  81%
+  |                                                                            
+  |=========================================================             |  82%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |===========================================================           |  84%
+  |                                                                            
+  |============================================================          |  85%
+  |                                                                            
+  |============================================================          |  86%
+  |                                                                            
+  |=============================================================         |  87%
+  |                                                                            
+  |=============================================================         |  88%
+  |                                                                            
+  |==============================================================        |  88%
+  |                                                                            
+  |==============================================================        |  89%
+  |                                                                            
+  |===============================================================       |  90%
+  |                                                                            
+  |===============================================================       |  91%
+  |                                                                            
+  |================================================================      |  91%
+  |                                                                            
+  |================================================================      |  92%
+  |                                                                            
+  |=================================================================     |  93%
+  |                                                                            
+  |==================================================================    |  94%
+  |                                                                            
+  |==================================================================    |  95%
+  |                                                                            
+  |===================================================================   |  96%
+  |                                                                            
+  |====================================================================  |  97%
+  |                                                                            
+  |===================================================================== |  98%
+  |                                                                            
+  |===================================================================== |  99%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+<pre class="r"><code>performance_rf&lt;-h2o.performance(ran_forest,df_test)
+performance_rf</code></pre>
+<pre><code>## H2ORegressionMetrics: drf
+## 
+## MSE:  0.009554336
+## RMSE:  0.09774628
+## MAE:  0.07295906
+## RMSLE:  0.04953018
+## Mean Residual Deviance :  0.009554336</code></pre>
+<pre class="r"><code>r2_for_tes_rf&lt;-h2o.r2(ran_forest,valid = T)
+r2_for_tes_rf</code></pre>
+<pre><code>## [1] 0.1312397</code></pre>
+<pre class="r"><code>#performance of the model on the 20% test set</code></pre>
+</div>
+<div id="gradient-boosting-machine" class="section level4">
+<h4>Gradient Boosting Machine</h4>
+<pre class="r"><code>ran_gbm&lt;-h2o.gbm(x=c(&quot;LOCATION&quot;,&quot;INBRED&quot;,&quot;INBRED_CLUSTER&quot;,&quot;TESTER&quot;,&quot;INBRED&quot;,&quot;INBRED_CLUSTER&quot;,&quot;TESTER&quot;,&quot;TESTER_CLUSTER&quot;),y=&quot;YIELD&quot;,training_frame = df_train,nfolds = 5,validation_frame = df_test)</code></pre>
+<pre><code>## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=                                                                     |   1%
+  |                                                                            
+  |=======                                                               |  10%
+  |                                                                            
+  |================                                                      |  22%
+  |                                                                            
+  |======================                                                |  32%
+  |                                                                            
+  |==============================                                        |  43%
+  |                                                                            
+  |=======================================                               |  56%
+  |                                                                            
+  |===============================================                       |  68%
+  |                                                                            
+  |====================================================                  |  75%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |============================================================          |  86%
+  |                                                                            
+  |================================================================      |  92%
+  |                                                                            
+  |===================================================================   |  96%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+<pre class="r"><code>performance_gbm&lt;-h2o.performance(ran_gbm)
+performance_gbm</code></pre>
+<pre><code>## H2ORegressionMetrics: gbm
+## ** Reported on training data. **
+## 
+## MSE:  0.008369364
+## RMSE:  0.09148423
+## MAE:  0.06856302
+## RMSLE:  0.04628433
+## Mean Residual Deviance :  0.008369364</code></pre>
+<pre class="r"><code>r2_for_tes_gbm&lt;-h2o.r2(ran_gbm,valid = T)
+r2_for_tes_gbm</code></pre>
+<pre><code>## [1] 0.1224523</code></pre>
+<p>Now we will compare between the two benchmark by each of the following parameters:
+1. R squared
+2. Mean Squared Error - MSE
+3. Root Mean Squared Error - RMSE
+4. Root mean Squared Logarithmic Error - RMSLE
+5. Mean Absolute Error - MAE</p>
+<p>R squared for the Distributed Random Forest model:</p>
+<pre><code>## [1] 0.1312397</code></pre>
+<p>R squared for the Gradient Boosting Machine:</p>
+<pre><code>## [1] 0.1224523</code></pre>
+<p>The R squared of both of the models are low, with random forest model higher by 0.01, let’s remember that R squared show us how good the predicted variable fit to a linear relationship, and maybe this is not the relationship in our data. In addition, good models can have low R squared.</p>
+<p>The RMSE and the MAE are two parameters which thier units are the same as the predicted units. YIELD values go between 0.047 to 1.08. Random forest RMSE and MAE for the validation set are 0.097 and 0.072 respectively which is not low in regards to the actual predicted units, gardient boosting RMSE and the MAE for the validation set are 0.091 and 0.068 which is less.</p>
+<p>I decided to keep on using the gradient boosting machine algorithm becasue the benchmark parameters are better for this model.</p>
+</div>
 
   
   <h4><i class="fa-share-alt" aria-hidden="true"></i>&nbsp;Share!</h4>
