@@ -1,5 +1,5 @@
 ---
-title: How you can build a dashboard to you field trials data
+title: How can you build a dashboard to you field trials data
 author: Omer Perach
 date: '2020-06-19'
 slug: how-you-can-build-a-dashboard-to-you-field-trials-data
