@@ -46,3 +46,5 @@ label<-seq(1,58)
 label
 df_1970%>%ggplot(aes(gen,size))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
 ```
+##### Link to the dashboard I built for this data
+(Dashboard) [ https://omerperach.shinyapps.io/agridata/]
