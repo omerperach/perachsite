@@ -17,6 +17,8 @@ You are a plant breeder, you in the end of collecting all the data for a long an
 Let's take a data set from the `agridat` package:
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(agridat)
+library(tidyverse)
+library(ggplot2)
 data("australia.soybean")
 ```
 
@@ -32,4 +34,17 @@ summary(australia.soybean)
 ```
 
 ##### As we can see from the summary:
-1. env variable is just a representation of place and year, first letter of location and the last two character of the year.  
+1. env variable is just a representation of place and year, first letter of location and the last two character of the year.
+2. Location- because there are 58 varieties multipe by two years 1970 and 1971 we have 116 observations for each location.
+3. Lodging - lodging is a level of the soy stem to bend, if the stem is bending too much, it can have effect on light penetration thus on yield.I cannot understand the Lodging units. 
+4. Size - seed size in milimieter ,w e can see very high ragnge from 4 to 23.
+5. protein - percentage, probably from wet matter. 
+6. Oil - percentage probably from wet matter.
+
+Let's inquire each continuous variable individually for 1970 per strain:
+```{r echo=TRUE}
+df_1970<-australia.soybean%>%filter(year==1970)
+label<-seq(1,58)
+label
+df_1970%>%ggplot(aes(gen,size))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
+```
