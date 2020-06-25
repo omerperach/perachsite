@@ -8,8 +8,6 @@ tags:
   - Data Visualization
   - Plant field trials
   - Plant Breeding
-description: ''
-topics: []
 ---
 
 You are a plant breeder, you in the end of collecting all the data for a long and exhaustive four year project with the goal to find the crop lines with the best traits for the customers.
