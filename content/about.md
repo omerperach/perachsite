@@ -15,6 +15,11 @@ This site is the place I decided to show thw world how all this learning getting
 
 Now the site is empty, but I will work hard to fill it with planty of content that interest me, I hope you will enjoy it.
 
+##### Links to my R shiny apps
+1. [Machine Learning]  (https://omerperach.shinyapps.io/macinelearning/)
+2. [Spatial Data demo] ( https://omerperach.shinyapps.io/yazamut01/)
+3. [Business Financial] (https://omerperach.shinyapps.io/business_generalize/)
+
 Yours,
 
 Omer
