@@ -1,0 +1,150 @@
+---
+title: Business Model GenoSee
+author: Omer Perach
+date: '2020-07-30'
+slug: pre-seed-early-stage-saas-startup-business-modeling
+categories: []
+tags:
+  - Business
+  - Finance
+  - SaaS
+---
+
+## Executive Summary
+Wordlwide climate change and decrease in arable lands and lands under permanent crops constitute a major
+concern for future food safety. Private and goverment based breeding programs working constantly to develop
+elite crops in order to meet the future demand to feed 10 billion people by 2050. Under these constraints, to meet the rising demand for food, agricultural production must increase by an estimated 50% without greatly increasing water usage or expanding the total land area dedicated to agriculture.
+The era of data enable us to make processes highly effieciet for companies and organisations. This is also true for the plant breeding industry, huge amount of data is recorded and collected - genotype, phenotype, environmental etc. Before inferring and analyzing the data, it should be transformed into findable, available, identifiable, reusable database. 
+GenoSee is a one stop shop for all the breeding program associates in which let them focus in their
+job - developing elite crops - while letting GenoSee handle the data related work. GenoSee estimate that it
+will reach 50 paying breeding programs worldwide during the first four years. GenoSee is asking for **$1M**
+dollars for the first phase of development and **$500K** for the second phase of devlopment. 
+Following our assumptions we calculte positive **NPV**.
+
+## Assumptions
+
+1. Thousands open plant breeding programs worldwide.
+2. Phase 1 one year to MVP and reaching first customers.
+3. Phase 2 one year for improvement and growth.
+4. We will look on the next 7 years.
+5. Tax rate 38%.
+6. Discount rate 12%.
+7. Depreciation 4 years straight line.
+
+## CAPEX Block
+We will start by creating a depreciation matrix for the capital investment of the company. We will assume 4
+years straight line depreciation that will taken into account only until it can be applied against taxable profit .
+
+```{r echo=TRUE}
+kHorizon<-7 # The model Horizon
+year<-1:kHorizon # A sequence to represent the horizon years
+kTaxRate<-38 # Tax percentage
+kDiscountrate<-12 # Discount rate percentage per year for NPV calculations.
+kDeprPer<-4 #month, the deprciation sheduale for the capital
+p1.dur<-1 #Duration phase one in year
+p2.dur<-1 #Duration phase 2 in year
+p1.capex<-1000000 #Investment for phase 1.
+p2.capex<-500000 #Investment phase 2.
+maint.capex<-0 # Additional parameter nit used.
+time.to.peak.sales<-3 #Time to reach 100 breedings programs.
+mkt.demand<-50 # Market demand after 4 years.
+phase <- (year <= p1.dur) * 1 +
+(year > p1.dur & year <= (p1.dur + p2.dur)) * 2 +
+(year > (p1.dur + p2.dur)) * 3
+capex<-(phase==1)*p1.capex/p1.dur+(phase==2)*p2.capex/p2.dur+(phase==3)*maint.capex
+depr.matrix <-
+t(sapply(year, function(y)
+ifelse(y <= p1.dur & year > 0,0,ifelse(
+y == (p1.dur + 1) & year < y + kDeprPer & year >= y,
+p1.capex / kDeprPer,
+ifelse((year >= y) & (year < (y + kDeprPer)),
+capex[y - 1] / kDeprPer, 0)
+)
+)
+)
+)
+depr.matrix
+depr<-colSums(depr.matrix)
+plot(year,depr/1e3,xlab="Year",ylab="Depreciation[$000]",type ="b" )
+```
+
+## Sales and Revenue Block
+
+We assume that it will take us 3 years after end of phase 1 to reach 100 breeding programs worldwide. We
+will price (assumption) the software to be 15000 dollars per year and additional subscription price per user of
+300 dollars per month. We estimate that each program will have 5 users by average.
+
+```{r echo=TRUE}
+mkt.adoption<-pmin(cumsum(phase>1)/time.to.peak.sales,1)
+price.per.software.year<-15000
+price.per.user<-300
+average.users.per.program<-10
+month.per.year<-12
+user.arr<-price.per.user*average.users.per.program*month.per.year
+price<-price.per.software.year+user.arr
+sales<-mkt.adoption*mkt.demand
+revenue<-sales*price
+plot(year, revenue/1000000,
+xlab = "Year",
+ylab = "Sales [000,000 $]",
+type = "b")
+```
+
+## OPEX Block
+The OPEX include R&D (research and development) and G&S (general sales and administrative) and is estimated to be 20% of the revenue. The operational cost will start only after phase 1.
+```{r echo=TRUE}
+opex<-revenue*0.2
+plot(year, opex/1000,
+xlab = "Year",
+ylab = "Sales [000$]",
+type = "b")
+```
+
+## Pro Forma Table
++ Gross profit = revenue-OPEX
++ Operating profit before taxes = Gross profit - OPEX - depreciation
++ Operating profit after tax = operating profit before tax-tax
++ Cash flow = operating profit after tax + depreciation - CAPEX
+
+```{r}
+gross.profit<-revenue-opex
+op.profit.before.tax<-gross.profit-opex-depr
+tax<-op.profit.before.tax*kTaxRate/100
+op.profit.after.tax<-op.profit.before.tax-tax
+cash.flow<-op.profit.after.tax+depr-capex
+cum.cah.flow<-cumsum(cash.flow)
+```
+
+## Cumulative Cash Flow
+```{r}
+plot(year, cum.cah.flow/1000,xlab = "Year",ylab = "Cash Flow [000$]", type = "b")
+```
+
+## Net Present Value
+```{r}
+discount.factors <- 1/(1 + kDiscountrate / 100) ^ year
+discounted.cash.flow <- cash.flow * discount.factors
+plot(year,
+discounted.cash.flow,
+xlab = "Year",
+ylab = "Discounted Cash Flow [$000]",
+type = "b")
+npv <- sum(discounted.cash.flow)
+```
+
+**Net Present Value is `{r} npv`**
+
+## Pro Forma Table
+
+```{r}
+pro.forma.vars <- array( c(sales, revenue, gross.profit,
+-opex, -depr, op.profit.before.tax, -tax, op.profit.after.tax, depr, -capex, cash.flow ), dim = c(kHorizon, 11))
+pro.forma <- data.frame(pro.forma.vars)
+pro.forma.headers <- c("Sales [breeding programs]", "Revenue","Gross Profit",
+"OPEX", "-Depreciation", "Operating Profit Before Tax", "Tax", "Operating Profit After Tax", "+Depreciation", "CAPEX",
+"Cash Flow")
+colnames(pro.forma) <- pro.forma.headers
+rownames(pro.forma) <- year
+pro.forma = t(pro.forma)
+pro.forma
+```
