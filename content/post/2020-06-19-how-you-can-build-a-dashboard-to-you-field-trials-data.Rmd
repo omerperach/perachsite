@@ -1,5 +1,5 @@
 ---
-title: How can you build a dashboard to the field trials project you finished
+title: Analyzing Soy Field Trial
 author: Omer Perach
 date: '2020-06-19'
 slug: how-you-can-build-a-dashboard-to-you-field-trials-data
@@ -38,6 +38,27 @@ summary(australia.soybean)
 4. Size - seed size in milimieter ,w e can see very high ragnge from 4 to 23.
 5. protein - percentage, probably from wet matter. 
 6. Oil - percentage probably from wet matter.
+7. Gene:
+    + Lines 1-40 Local selctions for Australia
+    + Line 41 Avoyelles (CPI 15939) Tanzania
+    + Line 42 Hernon 49 (CPI 15948) Tanzania
+    + Line 43 Mamloxi (CPI 172) Nigeria
+    + Line 44 Dorman USA 
+    + Line 45 Hampton USA
+    + Line 46 Hill USA
+    + Line 47 Jackson USA
+    + Line 48 Leslie USA
+    + Line 49 Semstar Australia
+    + Line 50 Wills USA
+    + Line 51 C26673 Morocco
+    + Line 52 C26671 Morocco
+    + Line 53 Bragg USA
+    + Line 54 Delmar USA
+    + Line 55 Lee USA
+    + Line 56 Hood USA
+    + Line 57 Ogden USA
+    + Line 58 Wayne USA
+
 
 Let's inquire each continuous variable individually for 1970 per strain:
 ```{r echo=TRUE}
@@ -46,5 +67,29 @@ label<-seq(1,58)
 label
 df_1970%>%ggplot(aes(gen,size))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
 ```
+
+Now we will look on the protein percentage: 
+```{r echo=TRUE}
+df_1970%>%ggplot(aes(gen,protein))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
+```
+
+Hiehgt:
+```{r echo=TRUE}
+df_1970%>%ggplot(aes(gen,height))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
+```
+Lodging:
+```{r echo=TRUE}
+df_1970%>%ggplot(aes(gen,lodging))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
+```
+
+yield:
+```{r echo=TRUE}
+df_1970%>%ggplot(aes(gen,yield))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
+```
+Oil:
+```{r echo=TRUE}
+df_1970%>%ggplot(aes(gen,oil))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
+```
+
 ##### Link to the dashboard I built for this data
-(Dashboard) [ https://omerperach.shinyapps.io/agridata/]
+[Dashboard](https://omerperach.shinyapps.io/agridata/)
