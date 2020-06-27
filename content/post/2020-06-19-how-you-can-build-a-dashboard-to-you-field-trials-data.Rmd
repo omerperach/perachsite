@@ -33,13 +33,13 @@ summary(australia.soybean)
 
 ##### As we can see from the summary:
 1. env variable is just a representation of place and year, first letter of location and the last two character of the year.
-2. Location- because there are 58 varieties multipe by two years 1970 and 1971 we have 116 observations for each location.
+2. Location- because there are 58 varieties multiple by two years 1970 and 1971 we have 116 observations for each location.
 3. Lodging - lodging is a level of the soy stem to bend, if the stem is bending too much, it can have effect on light penetration thus on yield.I cannot understand the Lodging units. 
-4. Size - seed size in milimieter ,w e can see very high ragnge from 4 to 23.
+4. Size - seed size in millimeter ,w e can see very high range from 4 to 23.
 5. protein - percentage, probably from wet matter. 
 6. Oil - percentage probably from wet matter.
 7. Gene:
-    + Lines 1-40 Local selctions for Australia
+    + Lines 1-40 Local sections for Australia
     + Line 41 Avoyelles (CPI 15939) Tanzania
     + Line 42 Hernon 49 (CPI 15948) Tanzania
     + Line 43 Mamloxi (CPI 172) Nigeria
@@ -73,7 +73,7 @@ Now we will look on the protein percentage:
 df_1970%>%ggplot(aes(gen,protein))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
 ```
 
-Hiehgt:
+Height:
 ```{r echo=TRUE}
 df_1970%>%ggplot(aes(gen,height))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)
 ```

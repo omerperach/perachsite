@@ -54,14 +54,14 @@ Now we look on the six first rows of the data:</p>
 <h5>As we can see from the summary:</h5>
 <ol style="list-style-type: decimal">
 <li>env variable is just a representation of place and year, first letter of location and the last two character of the year.</li>
-<li>Location- because there are 58 varieties multipe by two years 1970 and 1971 we have 116 observations for each location.</li>
+<li>Location- because there are 58 varieties multiple by two years 1970 and 1971 we have 116 observations for each location.</li>
 <li>Lodging - lodging is a level of the soy stem to bend, if the stem is bending too much, it can have effect on light penetration thus on yield.I cannot understand the Lodging units.</li>
-<li>Size - seed size in milimieter ,w e can see very high ragnge from 4 to 23.</li>
+<li>Size - seed size in millimeter ,w e can see very high range from 4 to 23.</li>
 <li>protein - percentage, probably from wet matter.</li>
 <li>Oil - percentage probably from wet matter.</li>
 <li>Gene:
 <ul>
-<li>Lines 1-40 Local selctions for Australia</li>
+<li>Lines 1-40 Local sections for Australia</li>
 <li>Line 41 Avoyelles (CPI 15939) Tanzania</li>
 <li>Line 42 Hernon 49 (CPI 15948) Tanzania</li>
 <li>Line 43 Mamloxi (CPI 172) Nigeria</li>
@@ -94,7 +94,7 @@ label</code></pre>
 <p>Now we will look on the protein percentage:</p>
 <pre class="r"><code>df_1970%&gt;%ggplot(aes(gen,protein))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)</code></pre>
 <p><img src="/post/2020-06-19-how-you-can-build-a-dashboard-to-you-field-trials-data_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Hiehgt:</p>
+<p>Height:</p>
 <pre class="r"><code>df_1970%&gt;%ggplot(aes(gen,height))+geom_jitter(aes(color=loc))+coord_flip()+scale_x_discrete(label=label)</code></pre>
 <p><img src="/post/2020-06-19-how-you-can-build-a-dashboard-to-you-field-trials-data_files/figure-html/unnamed-chunk-6-1.png" width="672" />
 Lodging:</p>
