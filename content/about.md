@@ -23,9 +23,10 @@ and
 
 
 ##### Links to my R shiny apps
-1. [Machine Learning]  (https://omerperach.shinyapps.io/macinelearning/)
-2. [Spatial Data demo] ( https://omerperach.shinyapps.io/yazamut01/)
-3. [Business Financial] (https://omerperach.shinyapps.io/business_generalize/)
+1. [Machine Learning](https://omerperach.shinyapps.io/macinelearning/)
+2. [Spatial Data demo]( https://omerperach.shinyapps.io/yazamut01/)
+3. [Business Financial](https://omerperach.shinyapps.io/business_generalize/)
+4. [Rice Experiment](https://omerperach.shinyapps.io/prototype_0/)
 
 Yours,
 

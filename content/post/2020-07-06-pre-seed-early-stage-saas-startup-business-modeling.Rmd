@@ -13,13 +13,13 @@ topics: []
 ---
 
 ## Executive Summary
-Wordlwide climate change and decrease in arable lands and lands under permanent crops constitute a major
-concern for future food safety. Private and goverment based breeding programs working constantly to develop
+Worldwide climate change and decrease in arable lands and lands under permanent crops constitute a major
+concern for future food safety. Private and government based breeding programs working constantly to develop
 elite crops in order to meet the future demand to feed 10 billion people by 2050. Under these constraints, to meet the rising demand for food, agricultural production must increase by an estimated 50% without greatly increasing water usage or expanding the total land area dedicated to agriculture.
-The era of data enable us to make processes highly effieciet for companies and organisations. This is also true for the plant breeding industry, huge amount of data is recorded and collected - genotype, phenotype, environmental etc. Before inferring and analyzing the data, it should be transformed into findable, available, identifiable, reusable database. 
+The era of data enable us to make processes highly efficient for companies and organisations. This is also true for the plant breeding industry, huge amount of data is recorded and collected - genotype, phenotype, environmental etc. Before inferring and analyzing the data, it should be transformed into findable, available, identifiable, reusable database. 
 GenoSee is a one stop shop for all the breeding program associates which let them focus in achieving their goal - developing elite crops  - while letting GenoSee handle the data related work. 
-GenoSee estimate that it will reach 50 paying breeding programs worldwide during the next four years. We are asking for **$1M** dollars for the first phase of development and **$500K** for the second phase of devlopment. 
-Following our assumptions we calculte a potential positive **NPV**.
+GenoSee estimate that it will reach 50 paying breeding programs worldwide during the next four years. We are asking for **$1M** dollars for the first phase of development and **$500K** for the second phase of development. 
+Following our assumptions we calculate a potential positive **NPV**.
 
 ## Assumptions
 
@@ -30,8 +30,8 @@ Following our assumptions we calculte a potential positive **NPV**.
 5. Tax rate 38%.
 6. Discount rate 12%.
 7. Depreciation 4 years straight line.
-8. During the next four years we will reach 50 breeding programs (to our opinion it is a conservative aproach).
-9. GenoSee will charge 15000 dollars for building the database abd additional 300 dollars per user monthly.
+8. During the next four years we will reach 50 breeding programs (to our opinion it is a conservative approach).
+9. GenoSee will charge 15000 dollars for building the database and additional 300 dollars per user monthly.
 10. GenoSee estimating average of 10 users per breeding program. 
 
 ## CAPEX Block
