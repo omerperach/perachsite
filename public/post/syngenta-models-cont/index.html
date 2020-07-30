@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="generator" content="Hugo 0.72.0" />
 
-  <title>GenoSee Business Model &middot; Omer Perach</title>
+  <title>Syngenta Models Cont.  &middot; Omer Perach</title>
 
     
 
@@ -224,7 +224,7 @@
 
 
 <div class="header">
-  <h1>GenoSee Business Model</h1>
+  <h1>Syngenta Models Cont. </h1>
   <h2></h2>
 </div>
 <div class="content">
@@ -233,7 +233,7 @@
 
   <div>
     <i class="fa fa-calendar fa-fw"></i>
-    <time>30 Jul 2020, 00:00</time>
+    <time>18 Jun 2020, 00:00</time>
   </div>
 
   
@@ -249,9 +249,7 @@
   <div>
     <i class="fa fa-tags fa-fw"></i>
     
-      <a class="post-taxonomy-tag" href="/tags/finance">Finance</a>&nbsp;&#47;
-    
-      <a class="post-taxonomy-tag" href="/tags/saas">SaaS</a>&nbsp;&#47;
+      <a class="post-taxonomy-tag" href="/tags/data-science">Data Science</a>&nbsp;&#47;
     
       <a class="post-taxonomy-tag" href="/tags/plant-breeding">Plant Breeding</a>
     
@@ -264,177 +262,408 @@
   
 
 
-<div id="executive-summary" class="section level2">
-<h2>Executive Summary</h2>
-<p>Wordlwide climate change and decrease in arable lands and lands under permanent crops constitute a major
-concern for future food safety. Private and goverment based breeding programs working constantly to develop
-elite crops in order to meet the future demand to feed 10 billion people by 2050. Under these constraints, to meet the rising demand for food, agricultural production must increase by an estimated 50% without greatly increasing water usage or expanding the total land area dedicated to agriculture.
-The era of data enable us to make processes highly effieciet for companies and organisations. This is also true for the plant breeding industry, huge amount of data is recorded and collected - genotype, phenotype, environmental etc. Before inferring and analyzing the data, it should be transformed into findable, available, identifiable, reusable database.
-GenoSee is a one stop shop for all the breeding program associates in which let them focus in their
-job - developing elite crops - while letting GenoSee handle the data related work. GenoSee estimate that it
-will reach 50 paying breeding programs worldwide during the first four years. GenoSee is asking for <strong>$1M</strong>
-dollars for the first phase of development and <strong>$500K</strong> for the second phase of devlopment.
-Following our assumptions we calculte positive <strong>NPV</strong>.</p>
-</div>
-<div id="assumptions" class="section level2">
-<h2>Assumptions</h2>
+<pre class="r"><code>set.seed(42)
+h2o.init()</code></pre>
+<pre><code>##  Connection successful!
+## 
+## R is connected to the H2O cluster: 
+##     H2O cluster uptime:         15 minutes 32 seconds 
+##     H2O cluster timezone:       Asia/Jerusalem 
+##     H2O data parsing timezone:  UTC 
+##     H2O cluster version:        3.30.0.1 
+##     H2O cluster version age:    3 months and 26 days !!! 
+##     H2O cluster name:           H2O_started_from_R_Omer_qea893 
+##     H2O cluster total nodes:    1 
+##     H2O cluster total memory:   0.23 GB 
+##     H2O cluster total cores:    4 
+##     H2O cluster allowed cores:  4 
+##     H2O cluster healthy:        TRUE 
+##     H2O Connection ip:          localhost 
+##     H2O Connection port:        54321 
+##     H2O Connection proxy:       NA 
+##     H2O Internal Security:      FALSE 
+##     H2O API Extensions:         Amazon S3, Algos, AutoML, Core V3, TargetEncoder, Core V4 
+##     R Version:                  R version 4.0.0 (2020-04-24)</code></pre>
+<pre><code>## Warning in h2o.clusterInfo(): 
+## Your H2O cluster version is too old (3 months and 26 days)!
+## Please download and install the latest version from http://h2o.ai/download/</code></pre>
+<pre class="r"><code>df&lt;-h2o.uploadFile(&quot;CC2020_train_final.csv&quot;)</code></pre>
+<pre><code>## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+<pre class="r"><code>df&lt;-df[,-1]
+train_test&lt;-h2o.splitFrame(df,ratios = 0.8)
+df_train&lt;-train_test[[1]]
+nrow(df_train)</code></pre>
+<pre><code>## [1] 159591</code></pre>
+<pre class="r"><code>df_test&lt;-train_test[[2]]
+nrow(df_test)</code></pre>
+<pre><code>## [1] 39885</code></pre>
+<p>As you can see we divided the training data provided by Syngenta to two data sets, a <em>df_train</em> and a <em>df_test</em>, the train data set comprise 159591 observations and the test 39885 observations.</p>
+<div id="training-the-two-house-keeping-models" class="section level4">
+<h4>Training the two house keeping models</h4>
 <ol style="list-style-type: decimal">
-<li>Thousands open plant breeding programs worldwide.</li>
-<li>Phase 1 one year to MVP and reaching first customers.</li>
-<li>Phase 2 one year for improvement and growth.</li>
-<li>We will look on the next 7 years.</li>
-<li>Tax rate 38%.</li>
-<li>Discount rate 12%.</li>
-<li>Depreciation 4 years straight line.</li>
+<li>Distributed Random Forest</li>
+<li>Gradient Boosting Machine</li>
 </ol>
 </div>
-<div id="capex-block" class="section level2">
-<h2>CAPEX Block</h2>
-<p>We will start by creating a depreciation matrix for the capital investment of the company. We will assume 4
-years straight line depreciation that will taken into account only until it can be applied against taxable profit .</p>
-<pre class="r"><code>kHorizon&lt;-7 # The model Horizon
-year&lt;-1:kHorizon # A sequence to represent the horizon years
-kTaxRate&lt;-38 # Tax percentage
-kDiscountrate&lt;-12 # Discount rate percentage per year for NPV calculations.
-kDeprPer&lt;-4 #month, the deprciation sheduale for the capital
-p1.dur&lt;-1 #Duration phase one in year
-p2.dur&lt;-1 #Duration phase 2 in year
-p1.capex&lt;-1000000 #Investment for phase 1.
-p2.capex&lt;-500000 #Investment phase 2.
-maint.capex&lt;-0 # Additional parameter nit used.
-time.to.peak.sales&lt;-3 #Time to reach 100 breedings programs.
-mkt.demand&lt;-50 # Market demand after 4 years.
-phase &lt;- (year &lt;= p1.dur) * 1 +
-(year &gt; p1.dur &amp; year &lt;= (p1.dur + p2.dur)) * 2 +
-(year &gt; (p1.dur + p2.dur)) * 3
-capex&lt;-(phase==1)*p1.capex/p1.dur+(phase==2)*p2.capex/p2.dur+(phase==3)*maint.capex
-depr.matrix &lt;-
-t(sapply(year, function(y)
-ifelse(y &lt;= p1.dur &amp; year &gt; 0,0,ifelse(
-y == (p1.dur + 1) &amp; year &lt; y + kDeprPer &amp; year &gt;= y,
-p1.capex / kDeprPer,
-ifelse((year &gt;= y) &amp; (year &lt; (y + kDeprPer)),
-capex[y - 1] / kDeprPer, 0)
-)
-)
-)
-)
-depr.matrix</code></pre>
-<pre><code>##      [,1]   [,2]   [,3]   [,4]   [,5]   [,6] [,7]
-## [1,]    0      0      0      0      0      0    0
-## [2,]    0 250000 250000 250000 250000      0    0
-## [3,]    0      0 125000 125000 125000 125000    0
-## [4,]    0      0      0      0      0      0    0
-## [5,]    0      0      0      0      0      0    0
-## [6,]    0      0      0      0      0      0    0
-## [7,]    0      0      0      0      0      0    0</code></pre>
-<pre class="r"><code>depr&lt;-colSums(depr.matrix)
-plot(year,depr/1e3,xlab=&quot;Year&quot;,ylab=&quot;Depreciation[$000]&quot;,type =&quot;b&quot; )</code></pre>
-<p><img src="/post/2020-07-06-pre-seed-early-stage-saas-startup-business-modeling_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<div id="training-the-two-house-keeping-models-1" class="section level4">
+<h4>Training the two house keeping models</h4>
+<ol style="list-style-type: decimal">
+<li>Distributed Random Forest</li>
+<li>Gradient Boosting Machine</li>
+</ol>
 </div>
-<div id="sales-and-revenue-block" class="section level2">
-<h2>Sales and Revenue Block</h2>
-<p>We assume that it will take us 3 years after end of phase 1 to reach 100 breeding programs worldwide. We
-will price (assumption) the software to be 15000 dollars per year and additional subscription price per user of
-300 dollars per month. We estimate that each program will have 5 users by average.</p>
-<pre class="r"><code>mkt.adoption&lt;-pmin(cumsum(phase&gt;1)/time.to.peak.sales,1)
-price.per.software.year&lt;-15000
-price.per.user&lt;-300
-average.users.per.program&lt;-10
-month.per.year&lt;-12
-user.arr&lt;-price.per.user*average.users.per.program*month.per.year
-price&lt;-price.per.software.year+user.arr
-sales&lt;-mkt.adoption*mkt.demand
-revenue&lt;-sales*price
-plot(year, revenue/1000000,
-xlab = &quot;Year&quot;,
-ylab = &quot;Sales [000,000 $]&quot;,
-type = &quot;b&quot;)</code></pre>
-<p><img src="/post/2020-07-06-pre-seed-early-stage-saas-startup-business-modeling_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div id="distributed-random-forest" class="section level4">
+<h4>Distributed Random Forest</h4>
+<pre class="r"><code>ran_forest&lt;-h2o.randomForest(model_id = &quot;Random_Forest&quot;,x=c(&quot;LOCATION&quot;,&quot;INBRED&quot;,&quot;INBRED_CLUSTER&quot;,&quot;TESTER&quot;,&quot;INBRED&quot;,&quot;INBRED_CLUSTER&quot;,&quot;TESTER&quot;,&quot;TESTER_CLUSTER&quot;),y=&quot;YIELD&quot;,training_frame = df_train,nfolds = 5,validation_frame = df_test)</code></pre>
+<pre><code>## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=                                                                     |   1%
+  |                                                                            
+  |=                                                                     |   2%
+  |                                                                            
+  |==                                                                    |   2%
+  |                                                                            
+  |==                                                                    |   3%
+  |                                                                            
+  |===                                                                   |   4%
+  |                                                                            
+  |====                                                                  |   5%
+  |                                                                            
+  |====                                                                  |   6%
+  |                                                                            
+  |=====                                                                 |   7%
+  |                                                                            
+  |=====                                                                 |   8%
+  |                                                                            
+  |======                                                                |   8%
+  |                                                                            
+  |======                                                                |   9%
+  |                                                                            
+  |=======                                                               |   9%
+  |                                                                            
+  |=======                                                               |  10%
+  |                                                                            
+  |========                                                              |  11%
+  |                                                                            
+  |========                                                              |  12%
+  |                                                                            
+  |=========                                                             |  13%
+  |                                                                            
+  |==========                                                            |  14%
+  |                                                                            
+  |==========                                                            |  15%
+  |                                                                            
+  |===========                                                           |  15%
+  |                                                                            
+  |===========                                                           |  16%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |============                                                          |  18%
+  |                                                                            
+  |=============                                                         |  18%
+  |                                                                            
+  |=============                                                         |  19%
+  |                                                                            
+  |==============                                                        |  20%
+  |                                                                            
+  |===============                                                       |  21%
+  |                                                                            
+  |===============                                                       |  22%
+  |                                                                            
+  |================                                                      |  23%
+  |                                                                            
+  |=================                                                     |  24%
+  |                                                                            
+  |=================                                                     |  25%
+  |                                                                            
+  |==================                                                    |  25%
+  |                                                                            
+  |==================                                                    |  26%
+  |                                                                            
+  |===================                                                   |  27%
+  |                                                                            
+  |====================                                                  |  28%
+  |                                                                            
+  |====================                                                  |  29%
+  |                                                                            
+  |=====================                                                 |  30%
+  |                                                                            
+  |======================                                                |  31%
+  |                                                                            
+  |======================                                                |  32%
+  |                                                                            
+  |=======================                                               |  32%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |========================                                              |  34%
+  |                                                                            
+  |========================                                              |  35%
+  |                                                                            
+  |=========================                                             |  36%
+  |                                                                            
+  |==========================                                            |  37%
+  |                                                                            
+  |==========================                                            |  38%
+  |                                                                            
+  |===========================                                           |  38%
+  |                                                                            
+  |===========================                                           |  39%
+  |                                                                            
+  |============================                                          |  40%
+  |                                                                            
+  |============================                                          |  41%
+  |                                                                            
+  |=============================                                         |  41%
+  |                                                                            
+  |=============================                                         |  42%
+  |                                                                            
+  |==============================                                        |  43%
+  |                                                                            
+  |===============================                                       |  44%
+  |                                                                            
+  |===============================                                       |  45%
+  |                                                                            
+  |================================                                      |  45%
+  |                                                                            
+  |================================                                      |  46%
+  |                                                                            
+  |=================================                                     |  47%
+  |                                                                            
+  |==================================                                    |  48%
+  |                                                                            
+  |==================================                                    |  49%
+  |                                                                            
+  |===================================                                   |  49%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |===================================                                   |  51%
+  |                                                                            
+  |====================================                                  |  51%
+  |                                                                            
+  |====================================                                  |  52%
+  |                                                                            
+  |=====================================                                 |  52%
+  |                                                                            
+  |=====================================                                 |  53%
+  |                                                                            
+  |======================================                                |  54%
+  |                                                                            
+  |======================================                                |  55%
+  |                                                                            
+  |=======================================                               |  55%
+  |                                                                            
+  |=======================================                               |  56%
+  |                                                                            
+  |========================================                              |  57%
+  |                                                                            
+  |=========================================                             |  58%
+  |                                                                            
+  |=========================================                             |  59%
+  |                                                                            
+  |==========================================                            |  59%
+  |                                                                            
+  |==========================================                            |  60%
+  |                                                                            
+  |===========================================                           |  61%
+  |                                                                            
+  |===========================================                           |  62%
+  |                                                                            
+  |============================================                          |  63%
+  |                                                                            
+  |=============================================                         |  64%
+  |                                                                            
+  |=============================================                         |  65%
+  |                                                                            
+  |==============================================                        |  65%
+  |                                                                            
+  |==============================================                        |  66%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |===============================================                       |  68%
+  |                                                                            
+  |================================================                      |  68%
+  |                                                                            
+  |================================================                      |  69%
+  |                                                                            
+  |=================================================                     |  70%
+  |                                                                            
+  |==================================================                    |  71%
+  |                                                                            
+  |==================================================                    |  72%
+  |                                                                            
+  |===================================================                   |  72%
+  |                                                                            
+  |===================================================                   |  73%
+  |                                                                            
+  |====================================================                  |  74%
+  |                                                                            
+  |====================================================                  |  75%
+  |                                                                            
+  |=====================================================                 |  75%
+  |                                                                            
+  |=====================================================                 |  76%
+  |                                                                            
+  |======================================================                |  77%
+  |                                                                            
+  |======================================================                |  78%
+  |                                                                            
+  |=======================================================               |  79%
+  |                                                                            
+  |========================================================              |  79%
+  |                                                                            
+  |========================================================              |  80%
+  |                                                                            
+  |=========================================================             |  81%
+  |                                                                            
+  |=========================================================             |  82%
+  |                                                                            
+  |==========================================================            |  82%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |===========================================================           |  84%
+  |                                                                            
+  |============================================================          |  85%
+  |                                                                            
+  |============================================================          |  86%
+  |                                                                            
+  |=============================================================         |  87%
+  |                                                                            
+  |==============================================================        |  88%
+  |                                                                            
+  |==============================================================        |  89%
+  |                                                                            
+  |===============================================================       |  90%
+  |                                                                            
+  |===============================================================       |  91%
+  |                                                                            
+  |================================================================      |  91%
+  |                                                                            
+  |================================================================      |  92%
+  |                                                                            
+  |=================================================================     |  93%
+  |                                                                            
+  |==================================================================    |  94%
+  |                                                                            
+  |==================================================================    |  95%
+  |                                                                            
+  |===================================================================   |  95%
+  |                                                                            
+  |===================================================================   |  96%
+  |                                                                            
+  |====================================================================  |  97%
+  |                                                                            
+  |====================================================================  |  98%
+  |                                                                            
+  |===================================================================== |  98%
+  |                                                                            
+  |===================================================================== |  99%
+  |                                                                            
+  |======================================================================|  99%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+<pre class="r"><code>performance_rf&lt;-h2o.performance(ran_forest,df_test)
+performance_rf</code></pre>
+<pre><code>## H2ORegressionMetrics: drf
+## 
+## MSE:  0.009551405
+## RMSE:  0.09773129
+## MAE:  0.0729833
+## RMSLE:  0.04952472
+## Mean Residual Deviance :  0.009551405</code></pre>
+<pre class="r"><code>r2_for_tes_rf&lt;-h2o.r2(ran_forest,valid = T)
+r2_for_tes_rf</code></pre>
+<pre><code>## [1] 0.1315062</code></pre>
+<pre class="r"><code>#performance of the model on the 20% test set</code></pre>
 </div>
-<div id="opex-block" class="section level2">
-<h2>OPEX Block</h2>
-<p>The OPEX include R&amp;D (research and development) and G&amp;S (general sales and administrative) and is estimated to be 20% of the revenue. The operational cost will start only after phase 1.</p>
-<pre class="r"><code>opex&lt;-revenue*0.2
-plot(year, opex/1000,
-xlab = &quot;Year&quot;,
-ylab = &quot;Sales [000$]&quot;,
-type = &quot;b&quot;)</code></pre>
-<p><img src="/post/2020-07-06-pre-seed-early-stage-saas-startup-business-modeling_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-</div>
-<div id="pro-forma-table" class="section level2">
-<h2>Pro Forma Table</h2>
-<ul>
-<li>Gross profit = revenue-OPEX</li>
-<li>Operating profit before taxes = Gross profit - OPEX - depreciation</li>
-<li>Operating profit after tax = operating profit before tax-tax</li>
-<li>Cash flow = operating profit after tax + depreciation - CAPEX</li>
-</ul>
-<pre class="r"><code>gross.profit&lt;-revenue-opex
-op.profit.before.tax&lt;-gross.profit-opex-depr
-tax&lt;-op.profit.before.tax*kTaxRate/100
-op.profit.after.tax&lt;-op.profit.before.tax-tax
-cash.flow&lt;-op.profit.after.tax+depr-capex
-cum.cah.flow&lt;-cumsum(cash.flow)</code></pre>
-</div>
-<div id="cumulative-cash-flow" class="section level2">
-<h2>Cumulative Cash Flow</h2>
-<pre class="r"><code>plot(year, cum.cah.flow/1000,xlab = &quot;Year&quot;,ylab = &quot;Cash Flow [000$]&quot;, type = &quot;b&quot;)</code></pre>
-<p><img src="/post/2020-07-06-pre-seed-early-stage-saas-startup-business-modeling_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-</div>
-<div id="net-present-value" class="section level2">
-<h2>Net Present Value</h2>
-<pre class="r"><code>discount.factors &lt;- 1/(1 + kDiscountrate / 100) ^ year
-discounted.cash.flow &lt;- cash.flow * discount.factors
-plot(year,
-discounted.cash.flow,
-xlab = &quot;Year&quot;,
-ylab = &quot;Discounted Cash Flow [$000]&quot;,
-type = &quot;b&quot;)</code></pre>
-<p><img src="/post/2020-07-06-pre-seed-early-stage-saas-startup-business-modeling_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<pre class="r"><code>npv &lt;- sum(discounted.cash.flow)</code></pre>
-<p><strong>Net Present Value is</strong> 1.834197510^{6}</p>
-</div>
-<div id="pro-forma-table-1" class="section level2">
-<h2>Pro Forma Table</h2>
-<pre class="r"><code>pro.forma.vars &lt;- array( c(sales, revenue, gross.profit,
--opex, -depr, op.profit.before.tax, -tax, op.profit.after.tax, depr, -capex, cash.flow ), dim = c(kHorizon, 11))
-pro.forma &lt;- data.frame(pro.forma.vars)
-pro.forma.headers &lt;- c(&quot;Sales [breeding programs]&quot;, &quot;Revenue&quot;,&quot;Gross Profit&quot;,
-&quot;OPEX&quot;, &quot;-Depreciation&quot;, &quot;Operating Profit Before Tax&quot;, &quot;Tax&quot;, &quot;Operating Profit After Tax&quot;, &quot;+Depreciation&quot;, &quot;CAPEX&quot;,
-&quot;Cash Flow&quot;)
-colnames(pro.forma) &lt;- pro.forma.headers
-rownames(pro.forma) &lt;- year
-pro.forma = t(pro.forma)
-pro.forma</code></pre>
-<pre><code>##                                  1             2             3       4       5
-## Sales [breeding programs]    0e+00      16.66667      33.33333      50      50
-## Revenue                      0e+00  850000.00000 1700000.00000 2550000 2550000
-## Gross Profit                 0e+00  680000.00000 1360000.00000 2040000 2040000
-## OPEX                         0e+00 -170000.00000 -340000.00000 -510000 -510000
-## -Depreciation                0e+00 -250000.00000 -375000.00000 -375000 -375000
-## Operating Profit Before Tax  0e+00  260000.00000  645000.00000 1155000 1155000
-## Tax                          0e+00  -98800.00000 -245100.00000 -438900 -438900
-## Operating Profit After Tax   0e+00  161200.00000  399900.00000  716100  716100
-## +Depreciation                0e+00  250000.00000  375000.00000  375000  375000
-## CAPEX                       -1e+06 -500000.00000       0.00000       0       0
-## Cash Flow                   -1e+06  -88800.00000  774900.00000 1091100 1091100
-##                                   6       7
-## Sales [breeding programs]        50      50
-## Revenue                     2550000 2550000
-## Gross Profit                2040000 2040000
-## OPEX                        -510000 -510000
-## -Depreciation               -125000       0
-## Operating Profit Before Tax 1405000 1530000
-## Tax                         -533900 -581400
-## Operating Profit After Tax   871100  948600
-## +Depreciation                125000       0
-## CAPEX                             0       0
-## Cash Flow                    996100  948600</code></pre>
-</div>
-<div id="references" class="section level2">
-<h2>References</h2>
-<p>The business model in this post based on a book by Robert D. Brown III *Business Case Analysis with R**</p>
+<div id="gradient-boosting-machine" class="section level4">
+<h4>Gradient Boosting Machine</h4>
+<pre class="r"><code>ran_gbm&lt;-h2o.gbm(x=c(&quot;LOCATION&quot;,&quot;INBRED&quot;,&quot;INBRED_CLUSTER&quot;,&quot;TESTER&quot;,&quot;INBRED&quot;,&quot;INBRED_CLUSTER&quot;,&quot;TESTER&quot;,&quot;TESTER_CLUSTER&quot;),y=&quot;YIELD&quot;,training_frame = df_train,nfolds = 5,validation_frame = df_test)</code></pre>
+<pre><code>## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |==                                                                    |   3%
+  |                                                                            
+  |=====                                                                 |   8%
+  |                                                                            
+  |=========                                                             |  12%
+  |                                                                            
+  |============                                                          |  18%
+  |                                                                            
+  |=================                                                     |  24%
+  |                                                                            
+  |====================                                                  |  29%
+  |                                                                            
+  |========================                                              |  34%
+  |                                                                            
+  |===========================                                           |  39%
+  |                                                                            
+  |===============================                                       |  44%
+  |                                                                            
+  |===================================                                   |  49%
+  |                                                                            
+  |=======================================                               |  56%
+  |                                                                            
+  |===========================================                           |  62%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |=================================================                     |  70%
+  |                                                                            
+  |===================================================                   |  73%
+  |                                                                            
+  |======================================================                |  77%
+  |                                                                            
+  |========================================================              |  80%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |============================================================          |  86%
+  |                                                                            
+  |===============================================================       |  89%
+  |                                                                            
+  |=================================================================     |  93%
+  |                                                                            
+  |====================================================================  |  97%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+<pre class="r"><code>performance_gbm&lt;-h2o.performance(ran_gbm)
+performance_gbm</code></pre>
+<pre><code>## H2ORegressionMetrics: gbm
+## ** Reported on training data. **
+## 
+## MSE:  0.008369364
+## RMSE:  0.09148423
+## MAE:  0.06856302
+## RMSLE:  0.04628433
+## Mean Residual Deviance :  0.008369364</code></pre>
+<pre class="r"><code>r2_for_tes_gbm&lt;-h2o.r2(ran_gbm,valid = T)
+r2_for_tes_gbm</code></pre>
+<pre><code>## [1] 0.1224523</code></pre>
+<p>Now we will compare between the two benchmark by each of the following parameters:
+1. R squared
+2. Mean Squared Error - MSE
+3. Root Mean Squared Error - RMSE
+4. Root mean Squared Logarithmic Error - RMSLE
+5. Mean Absolute Error - MAE</p>
+<p>R squared for the Distributed Random Forest model:</p>
+<pre><code>## [1] 0.1315062</code></pre>
+<p>R squared for the Gradient Boosting Machine:</p>
+<pre><code>## [1] 0.1224523</code></pre>
+<p>The R squared of both of the models are low, with random forest model higher by 0.01, let’s remember that R squared show us how good the predicted variable fit to a linear relationship, and maybe this is not the relationship in our data. In addition, good models can have low R squared.</p>
+<p>The RMSE and the MAE are two parameters which thier units are the same as the predicted units. YIELD values go between 0.047 to 1.08. Random forest RMSE and MAE for the validation set are 0.097 and 0.072 respectively which is not low in regards to the actual predicted units, gardient boosting RMSE and the MAE for the validation set are 0.091 and 0.068 which is less.</p>
+<p>I decided to keep on using the gradient boosting machine algorithm becasue the benchmark parameters are better for this model.</p>
 </div>
 
   
@@ -482,13 +711,13 @@ pro.forma</code></pre>
 <div class="prev-next-post pure-g">
   <div class="pure-u-1-24" style="text-align: left;">
     
-    <a href="/post/how-you-can-build-a-dashboard-to-you-field-trials-data/"><i class="fa fa-chevron-left"></i></a>
+    <a href="/post/plant-genomic-selection/"><i class="fa fa-chevron-left"></i></a>
     
   </div>
   <div class="pure-u-10-24">
     
     <nav class="prev">
-      <a href="/post/how-you-can-build-a-dashboard-to-you-field-trials-data/">Analyzing Soy Field Trial</a>
+      <a href="/post/plant-genomic-selection/">Analyzing Credit Data</a>
     </nav>
     
   </div>
@@ -497,8 +726,14 @@ pro.forma</code></pre>
   </div>
   <div class="pure-u-10-24">
     
+    <nav class="next">
+      <a href="/post/how-you-can-build-a-dashboard-to-you-field-trials-data/">Analyzing Soy Field Trial</a>
+    </nav>
+    
   </div>
   <div class="pure-u-1-24" style="text-align: right;">
+    
+    <a href="/post/how-you-can-build-a-dashboard-to-you-field-trials-data/"><i class="fa fa-chevron-right"></i></a>
     
   </div>
 </div>
@@ -550,9 +785,6 @@ pro.forma</code></pre>
 
 
 
-<script src="/js/math-code.js"></script>
-  <script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-  
 
 
 </body>

@@ -1,14 +1,14 @@
 ---
-title: 'GenoSee Business Model'
-author: Omer Perach
+title: "GenoSee Business Model"
+author: "Omer Perach"
 date: '2020-07-30'
-slug: syngenta-models-cont
-categories: []
-tags:
-  - Finance
-  - SaaS
-  - Plant Breeding
+output: pdf_document
 description: ''
+tags:
+- Finance
+- SaaS
+- Plant Breeding
+categories: []
 topics: []
 ---
 
@@ -17,21 +17,22 @@ Wordlwide climate change and decrease in arable lands and lands under permanent 
 concern for future food safety. Private and goverment based breeding programs working constantly to develop
 elite crops in order to meet the future demand to feed 10 billion people by 2050. Under these constraints, to meet the rising demand for food, agricultural production must increase by an estimated 50% without greatly increasing water usage or expanding the total land area dedicated to agriculture.
 The era of data enable us to make processes highly effieciet for companies and organisations. This is also true for the plant breeding industry, huge amount of data is recorded and collected - genotype, phenotype, environmental etc. Before inferring and analyzing the data, it should be transformed into findable, available, identifiable, reusable database. 
-GenoSee is a one stop shop for all the breeding program associates in which let them focus in their
-job - developing elite crops - while letting GenoSee handle the data related work. GenoSee estimate that it
-will reach 50 paying breeding programs worldwide during the first four years. GenoSee is asking for **$1M**
-dollars for the first phase of development and **$500K** for the second phase of devlopment. 
-Following our assumptions we calculte positive **NPV**.
+GenoSee is a one stop shop for all the breeding program associates which let them focus in achieving their goal - developing elite crops  - while letting GenoSee handle the data related work. 
+GenoSee estimate that it will reach 50 paying breeding programs worldwide during the next four years. We are asking for **$1M** dollars for the first phase of development and **$500K** for the second phase of devlopment. 
+Following our assumptions we calculte a potential positive **NPV**.
 
 ## Assumptions
 
-1. Thousands open plant breeding programs worldwide.
-2. Phase 1 one year to MVP and reaching first customers.
-3. Phase 2 one year for improvement and growth.
+1. Thousands of open plant breeding programs worldwide.
+2. Phase 1 - one year to MVP and reaching first customers.
+3. Phase 2 - one year for improvement and growth.
 4. We will look on the next 7 years.
 5. Tax rate 38%.
 6. Discount rate 12%.
 7. Depreciation 4 years straight line.
+8. During the next four years we will reach 50 breeding programs (to our opinion it is a conservative aproach).
+9. GenoSee will charge 15000 dollars for building the database abd additional 300 dollars per user monthly.
+10. GenoSee estimating average of 10 users per breeding program. 
 
 ## CAPEX Block
 We will start by creating a depreciation matrix for the capital investment of the company. We will assume 4
