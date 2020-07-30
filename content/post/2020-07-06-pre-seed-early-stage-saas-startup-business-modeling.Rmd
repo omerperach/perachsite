@@ -99,7 +99,7 @@ The OPEX include R&D (research and development) and G&S (general sales and admin
 opex<-revenue*0.2
 plot(year, opex/1000,
 xlab = "Year",
-ylab = "Sales [000$]",
+ylab = "OPEX [000$]",
 type = "b")
 ```
 
