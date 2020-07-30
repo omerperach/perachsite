@@ -73,7 +73,7 @@ plot(year,depr/1e3,xlab="Year",ylab="Depreciation[$000]",type ="b" )
 
 ## Sales and Revenue Block
 
-We assume that it will take us 3 years after end of phase 1 to reach 100 breeding programs worldwide. We
+We assume that it will take us 3 years after end of phase 1 to reach 50 breeding programs worldwide. We
 will price (assumption) the software to be 15000 dollars per year and additional subscription price per user of
 300 dollars per month. We estimate that each program will have 5 users by average.
 

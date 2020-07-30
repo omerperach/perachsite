@@ -85,7 +85,7 @@ plot(year,depr/1e3,xlab=&quot;Year&quot;,ylab=&quot;Depreciation[$000]&quot;,typ
 </div>
 <div id="sales-and-revenue-block" class="section level2">
 <h2>Sales and Revenue Block</h2>
-<p>We assume that it will take us 3 years after end of phase 1 to reach 100 breeding programs worldwide. We
+<p>We assume that it will take us 3 years after end of phase 1 to reach 50 breeding programs worldwide. We
 will price (assumption) the software to be 15000 dollars per year and additional subscription price per user of
 300 dollars per month. We estimate that each program will have 5 users by average.</p>
 <pre class="r"><code>mkt.adoption&lt;-pmin(cumsum(phase&gt;1)/time.to.peak.sales,1)
