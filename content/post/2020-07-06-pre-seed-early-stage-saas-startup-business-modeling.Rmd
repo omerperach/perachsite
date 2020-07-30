@@ -1,5 +1,5 @@
 ---
-title: 'GenoSeee Business Model'
+title: 'GenoSee Business Model'
 author: Omer Perach
 date: '2020-07-30'
 slug: syngenta-models-cont
@@ -150,3 +150,6 @@ rownames(pro.forma) <- year
 pro.forma = t(pro.forma)
 pro.forma
 ```
+
+## References
+The business model in this post based on a book by Robert D. Brown III *Business Case Analysis with R**
