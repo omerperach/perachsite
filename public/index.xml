@@ -77,11 +77,10 @@ library(dplyr)loan_df&amp;lt;-read.csv(&amp;quot;Assignment_1_data.csv&amp;quot
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>Hi, my name is Omer Perach and this site serve as my play ground.
-Every once in a while you need to feed your couriosity.
-In the last four years, step by step, I am learning and studying R for data visualiztion, statistics, supervised learning etc.
-This site is the place I decided to show thw world how all this learning getting a shape and format.
-Now the site is empty, but I will work hard to fill it with planty of content that interest me, I hope you will enjoy it.</description>
+      <description>Hi, my name is Omer Perach and this site serves as my play ground.
+Every once in a while you need to feed your curiosity and challenge your mind.
+In the last four years, step by step, I am learning and studying R for data visualization, statistics, supervised learning etc.
+You are welcome to walk around and read, I would be happy if you will find things that could ignite your curiosity.</description>
     </item>
     
     <item>

@@ -5,15 +5,22 @@ sidemenu: "true"
 title: About
 ---
 
-Hi, my name is Omer Perach and this site serve as my play ground.
+Hi, my name is Omer Perach and this site serves as my play ground.
 
-Every once in a while you need to feed your couriosity. 
+Every once in a while you need to feed your curiosity and challenge your mind.  
 
-In the last four years, step by step, I am learning and studying R for data visualiztion, statistics, supervised learning etc.
+In the last four years, step by step, I am learning and studying R for data visualization, statistics, supervised learning etc.
 
-This site is the place I decided to show thw world how all this learning getting a shape and format.
+You are welcome to walk around and read, I would be happy if you will find things that could ignite your curiosity.
 
-Now the site is empty, but I will work hard to fill it with planty of content that interest me, I hope you will enjoy it.
+I will finish with the following quoting by Albert Einstien
+
+**"Imagination is everything. It is the preview of life's coming attraction"**
+
+and 
+
+**“Imagination is more important than knowledge. For knowledge is limited to all we now know and understand, while imagination embraces the entire world, and all there ever will be to know and understand.”**
+
 
 ##### Links to my R shiny apps
 1. [Machine Learning]  (https://omerperach.shinyapps.io/macinelearning/)
