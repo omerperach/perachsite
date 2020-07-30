@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SaaS on Omer Perach</title>
+    <link>/tags/saas/</link>
+    <description>Recent content in SaaS on Omer Perach</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <lastBuildDate>Thu, 30 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/saas/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>GenoSeee Business Model</title>
+      <link>/post/syngenta-models-cont/</link>
+      <pubDate>Thu, 30 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/syngenta-models-cont/</guid>
+      <description>Executive SummaryWordlwide climate change and decrease in arable lands and lands under permanent crops constitute a majorconcern for future food safety. Private and goverment based breeding programs working constantly to developelite crops in order to meet the future demand to feed 10 billion people by 2050. Under these constraints, to meet the rising demand for food, agricultural production must increase by an estimated 50% without greatly increasing water usage or expanding the total land area dedicated to agriculture.</description>
+    </item>
+    
+  </channel>
+</rss>

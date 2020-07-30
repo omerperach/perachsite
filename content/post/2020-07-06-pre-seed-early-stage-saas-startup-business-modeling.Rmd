@@ -1,11 +1,15 @@
 ---
-title: Business Model GenoSee
+title: 'GenoSeee Business Model'
 author: Omer Perach
 date: '2020-07-30'
+slug: syngenta-models-cont
+categories: []
 tags:
-  - Business
   - Finance
   - SaaS
+  - Plant Breeding
+description: ''
+topics: []
 ---
 
 ## Executive Summary
