@@ -33,15 +33,6 @@ The data is a field trial on 58 varieties of soybean, grown in four locations ac
     </item>
     
     <item>
-      <title>Syngenta Models Cont. </title>
-      <link>/post/syngenta-models-cont/</link>
-      <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/post/syngenta-models-cont/</guid>
-      <description>set.seed(42)h2o.init()## Connection successful!## ## R is connected to the H2O cluster: ## H2O cluster uptime: 15 minutes 48 seconds ## H2O cluster timezone: Asia/Jerusalem ## H2O data parsing timezone: UTC ## H2O cluster version: 3.30.0.1 ## H2O cluster version age: 2 months and 15 days ## H2O cluster name: H2O_started_from_R_Omer_qea893 ## H2O cluster total nodes: 1 ## H2O cluster total memory: 0.09 GB ## H2O cluster total cores: 4 ## H2O cluster allowed cores: 4 ## H2O cluster healthy: TRUE ## H2O Connection ip: localhost ## H2O Connection port: 54321 ## H2O Connection proxy: NA ## H2O Internal Security: FALSE ## H2O API Extensions: Amazon S3, Algos, AutoML, Core V3, TargetEncoder, Core V4 ## R Version: R version 4.</description>
-    </item>
-    
-    <item>
       <title>Analyzing Credit Data</title>
       <link>/post/plant-genomic-selection/</link>
       <pubDate>Mon, 15 Jun 2020 00:00:00 +0000</pubDate>
@@ -77,18 +68,6 @@ library(dplyr)loan_df&amp;lt;-read.csv(&amp;quot;Assignment_1_data.csv&amp;quot
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>Hi, my name is Omer Perach and this site serves as my play ground.
-Every once in a while you need to feed your curiosity and challenge your mind.
-In the last four years, step by step, I am learning and studying R for data visualization, statistics, supervised learning etc.
-You are welcome to walk around and read, I would be happy if you will find things that could ignite your curiosity.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>/about.utf8/</link>
-      <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/about.utf8/</guid>
       <description>Hi, my name is Omer Perach and this site serves as my play ground.
 Every once in a while you need to feed your curiosity and challenge your mind.
 In the last four years, step by step, I am learning and studying R for data visualization, statistics, supervised learning etc.
