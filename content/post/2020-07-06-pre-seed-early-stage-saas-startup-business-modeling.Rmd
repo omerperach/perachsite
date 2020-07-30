@@ -43,7 +43,7 @@ kHorizon<-7 # The model Horizon
 year<-1:kHorizon # A sequence to represent the horizon years
 kTaxRate<-38 # Tax percentage
 kDiscountrate<-12 # Discount rate percentage per year for NPV calculations.
-kDeprPer<-4 #month, the deprciation sheduale for the capital
+kDeprPer<-4 #year, the deprciation sheduale for the capital
 p1.dur<-1 #Duration phase one in year
 p2.dur<-1 #Duration phase 2 in year
 p1.capex<-1000000 #Investment for phase 1.
