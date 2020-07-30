@@ -134,7 +134,7 @@ type = "b")
 npv <- sum(discounted.cash.flow)
 ```
 
-**Net Present Value is `{r} npv`**
+**Net Present Value is** `r npv`
 
 ## Pro Forma Table
 
