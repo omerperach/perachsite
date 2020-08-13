@@ -1,8 +1,8 @@
 ---
-date: "2014-04-09"
+title: "About"
 description: About me and this site
-sidemenu: "true"
-title: About
+date: '2020-08-13'
+sidemenu: 'true'
 ---
 ![](/./about_files/IMG_0503.jpg)
 Hi, my name is Omer Perach and this site serves as my play ground.

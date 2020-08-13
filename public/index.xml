@@ -13,6 +13,18 @@
     
     
     <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Thu, 13 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Hi, my name is Omer Perach and this site serves as my play ground.
+Every once in a while you need to feed your curiosity and challenge your mind.
+In the last four years, step by step, I am learning and studying R for data visualization, statistics, supervised learning etc.
+You are welcome to walk around and read, I would be happy if you will find things that could ignite your curiosity.</description>
+    </item>
+    
+    <item>
       <title>GenoSee Business Model</title>
       <link>/post/2020-07-06-pre-seed-early-stage-saas-startup-business-modeling/</link>
       <pubDate>Thu, 30 Jul 2020 00:00:00 +0000</pubDate>
@@ -69,18 +81,6 @@ library(dplyr)loan_df&amp;lt;-read.csv(&amp;quot;Assignment_1_data.csv&amp;quot
       <guid>/post/rfm-modeling/</guid>
       <description>The Challenge PurposeCommercial corn is one of the most important crops in the world.Every year plant breeders produce new corn products known as hybrids. Those hybrids are the products of crossing two “parents” called inbred. The most demanding and resource consuming procedure is to develop inbreds and subsequently assess the crossing outcome - hybrid - of one inbred to another inbred called ‘tester’.
 The importance of this projectOn 2050 world population will approximately be 10 billion people.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>/about/</link>
-      <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/about/</guid>
-      <description>Hi, my name is Omer Perach and this site serves as my play ground.
-Every once in a while you need to feed your curiosity and challenge your mind.
-In the last four years, step by step, I am learning and studying R for data visualization, statistics, supervised learning etc.
-You are welcome to walk around and read, I would be happy if you will find things that could ignite your curiosity.</description>
     </item>
     
     <item>
