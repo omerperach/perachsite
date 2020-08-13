@@ -4,9 +4,7 @@ description: About me and this site
 sidemenu: "true"
 title: About
 ---
-
-![my picture](my_pic.jpg)
-
+![](/./about_files/IMG_0503.jpg)
 Hi, my name is Omer Perach and this site serves as my play ground.
 
 Every once in a while you need to feed your curiosity and challenge your mind.  
