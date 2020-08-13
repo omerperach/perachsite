@@ -4,9 +4,6 @@ description: About me and this site
 date: '2020-08-13'
 sidemenu: 'true'
 ---
-
-<img src="/./about_files/IMG_0503.jpg" alt="" width="400px"/>
-
 Hi, my name is Omer Perach and this site serves as my play ground.
 
 Every once in a while you need to feed your curiosity and challenge your mind.  
