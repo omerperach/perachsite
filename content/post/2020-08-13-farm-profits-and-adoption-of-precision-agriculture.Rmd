@@ -1,5 +1,5 @@
 ---
-title: "How to Analyse USA Farms with ARMS API"
+title: "Israeli Precision Agriculture Startups  - this post is for you"
 author: "Omer Perach"
 date: '2020-08-13'
 slug: farm-profits-and-adoption-of-precision-agriculture
