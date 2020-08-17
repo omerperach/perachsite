@@ -1,0 +1,159 @@
+---
+title: "How to Analyse USA Farms with ARMS API"
+author: "Omer Perach"
+date: '2020-08-13'
+slug: farm-profits-and-adoption-of-precision-agriculture
+categories: []
+tags:
+- Business
+- Farming
+description: ''
+topics: []
+---
+
+
+
+<p>The united states department of agriculture published a <a href="https://www.ers.usda.gov/webdocs/publications/80326/err-217.pdf?v=4266">report</a> (Oct-2016) which assessed the adoption of precision agriculture (PA) technologies by farmers in addition to how it impact the farm profit.</p>
+<p><strong>The bottom line - The impact of these PA technologies on profits for U.S. corn producers is positive, but small.</strong></p>
+<p>There is a big hype in precision agriculture technologies and many Israeli start-ups working in that field.</p>
+<div id="some-israeli-startups-in-the-field-of-precision-agriculture" class="section level3">
+<h3>Some Israeli startups in the field of precision agriculture</h3>
+<ul>
+<li>Prospera</li>
+<li>Taranis</li>
+<li>Viridix</li>
+<li>Cropx</li>
+<li>SeeTree</li>
+<li>Trieye</li>
+<li>Farmigo</li>
+<li>Saturas</li>
+</ul>
+</div>
+<div id="the-blog-will" class="section level3">
+<h3>The blog will:</h3>
+<ol style="list-style-type: decimal">
+<li>Show you how to query the ARMS database with <strong>rarms</strong> package in order undertand the USA farm industry - if you wish to penetrate that market.</li>
+<li>Provide valuable insights to Israeli start-ups from the USDA <a href="https://www.ers.usda.gov/webdocs/publications/80326/err-217.pdf?v=4266">report</a> and other important <a href="https://www.sciencedirect.com/science/article/pii/S0308521X16305418#gr1">research</a>.</li>
+</ol>
+</div>
+<div id="get-a-key-and-install-the-rarms-package" class="section level3">
+<h3>Get a key and install the rarms package</h3>
+<ol style="list-style-type: decimal">
+<li>First of all you should receive a key from this <a href="https://api.data.gov/signup/">link</a>.</li>
+<li>Install and load <strong>rarms</strong> package which helps us in the query.</li>
+</ol>
+</div>
+<div id="the-arms-experts-aggregated-a-three-phase-survey-happening-during-each-year-into-eight-reports" class="section level3">
+<h3>The ARMS experts aggregated a three phase survey happening during each year into eight reports:</h3>
+<ul>
+<li>Farm Business Balance Sheet</li>
+<li>Farm Business Income Statement</li>
+<li>Farm Business Financial Ratios</li>
+<li>Structural Characteristics</li>
+<li>Farm Business Debt Repayment Capacity</li>
+<li>Government Payments</li>
+<li>Operator Household Income</li>
+<li>Operator Household Balance Sheet</li>
+</ul>
+</div>
+<div id="variables" class="section level3">
+<h3>Variables</h3>
+<p>Each report have its own variables which can be find in the next <a href="https://www.ers.usda.gov/media/10447/arms-all-variables-december-2019.csv">link</a>. The variables have shortcut name build from letters.</p>
+</div>
+<div id="six-categories" class="section level3">
+<h3>Six Categories</h3>
+<ul>
+<li>Economic Class (sal)</li>
+<li>Farm Typology (ftyppl)</li>
+<li>Operator age (age)</li>
+<li>Farm Resource Region (reg)</li>
+<li>NASS region (n5reg)</li>
+<li>Production Specialty (spec)</li>
+</ul>
+</div>
+<div id="lets-query-with-the-following-paameters" class="section level3">
+<h3>Let’s query with the following paameters</h3>
+<ol style="list-style-type: decimal">
+<li>Years 2015-2018.</li>
+<li>All USA states.</li>
+<li>Category Economic class.</li>
+<li>Variable: expenses for purchases of seeds, plants, and related expenses such as seed cleaning, inoculation, rooting hormones, bagging, germinating, and delinting.</li>
+</ol>
+<pre class="r"><code>query_plant_seed &lt;- armsRequest(year = c(2012:2018), state = NULL, category = c(&#39;spec&#39;),report = c(2), variable = c(&#39;evseedp&#39;), farmtype = &#39;all farms&#39;)
+df_plant_seed&lt;-query_plant_seed$data #assigning the list data to data.frame
+df_plant_seed%&gt;%ggplot(aes(x=year,y=estimate/1000,color=category_value))+geom_line(size=1)+scale_color_viridis(discrete = T,&quot;Production Specialty&quot;)+labs(title = &quot;Seed and Plants Expenses&quot;)+xlab(&quot;Years&quot;)+ylab(&quot;Dollars per farm [$000]&quot;)</code></pre>
+<p><img src="/post/2020-08-13-farm-profits-and-adoption-of-precision-agriculture_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>target&lt;-c(&quot;Corn&quot;,&quot;Soybean&quot;,&quot;Tobacco, Cotton, Peanuts&quot;,&quot;Wheat&quot;,&quot;Specialty Crops (F,V,N)&quot;)
+df_only_plant&lt;-df_plant_seed%&gt;%filter(category_value %in% target)
+df_only_plant%&gt;%ggplot(aes(x=year,y=estimate/1000,color=category_value))+geom_line(size=1)+scale_color_viridis(discrete = T,&quot;Production Specialty&quot;)+labs(title = &quot;Seed and Plants Expenses&quot;)+xlab(&quot;Years&quot;)+ylab(&quot;Dollars per farm [$000]&quot;)</code></pre>
+<p><img src="/post/2020-08-13-farm-profits-and-adoption-of-precision-agriculture_files/figure-html/unnamed-chunk-2-2.png" width="672" />
+We can now look on the same category but on different value, for example, the Fertilizer and chemicals (Amount the farm operation paid for commercial fertilizers, lime and soil conditioners, pesticides, insecticides, herbicides, fungicides, defoliants, nematicides, fumigants, growth regulators, and rodenticides used on crops, pasture, acreage idled under government programs, seeds, crop storage buildings or seed beds.):</p>
+<pre class="r"><code>query_chemicals &lt;- armsRequest(year = c(2012:2018), state = NULL, category = c(&#39;spec&#39;),report = c(2), variable = c(&#39;evfertc&#39;), farmtype = &#39;all farms&#39;)
+df_chemicals&lt;-query_chemicals$data
+target&lt;-c(&quot;Corn&quot;,&quot;Soybean&quot;,&quot;Tobacco, Cotton, Peanuts&quot;,&quot;Wheat&quot;,&quot;Specialty Crops (F,V,N)&quot;)
+df_only_plant_chemicals&lt;-df_chemicals%&gt;%filter(category_value %in% target)
+df_only_plant_chemicals%&gt;%ggplot(aes(x=year,y=estimate/1000,color=category_value))+geom_line(size=1)+scale_color_viridis(discrete = T,&quot;Production Specialty&quot;)+labs(title = &quot;Chemicals and Fertilizers Expenses&quot;)+xlab(&quot;Years&quot;)+ylab(&quot;Dollars per farm [$000]&quot;)</code></pre>
+<p><img src="/post/2020-08-13-farm-profits-and-adoption-of-precision-agriculture_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>In these two queries and graph we can start to understand the complexity and the multidimensional landscape of the USA farming industry.</p>
+</div>
+<div id="some-thoughts-on-the-above-graphs-in-relate-to-israeli-startups" class="section level3">
+<h3>Some thoughts on the above graphs in relate to Israeli startups:</h3>
+<ul>
+<li>By delving deeper into the reports data we can understand trends in farm financial parameters that could assist us to search for potential customers.</li>
+<li>Same approach can be used to improve our product market fit.</li>
+<li>I do not know how the Coronavirus pandemic will influence the status but we must take it into our considerations.</li>
+</ul>
+</div>
+<div id="the-report-about-precision-agriculture-pa-technology-adoption-by-us-farms-and-additional-reccomendations-for-precision-agriculture-startups" class="section level3">
+<h3>The report about precision agriculture (PA) technology adoption by US farms and additional reccomendations for precision agriculture startups</h3>
+<div id="research-on-how-to-better-design-decision-support-tool-for-farmers" class="section level4">
+<h4>Research on how to better design decision support tool for farmers</h4>
+<p>I would like to integrate the report together with a <a href="https://www.sciencedirect.com/science/article/pii/S0308521X16305418#gr1">research</a> done in the UK named <strong>Decision support tools for agriculture: Towards effective design and delivery</strong>.</p>
+</div>
+<div id="research-most-important-findings" class="section level4">
+<h4>Research most important findings:</h4>
+<ul>
+<li>Product that will succeed in the following categories for the farmers will win:
+<ul>
+<li>Financial Performance for the farmers.</li>
+<li>Ease of use.</li>
+<li>Other farmers recommendations.</li>
+<li>Trust - collaborate with agriculture trusted firms, it is still a traditional industry.</li>
+<li>Cost for the farmer - straight forward reason.</li>
+<li>Habit - look into younger generation farmers.</li>
+<li>Relevant for the user - be careful with standard product, it need to be relevant for the specific user.</li>
+<li>Farmer adviser-comptability - farmers consulting with advisers, you should think about it when you build the product.</li>
+</ul></li>
+</ul>
+</div>
+<div id="three-types-of-pa-technologies-were-examined-in-the-usda-report" class="section level4">
+<h4>Three types of PA technologies were examined in the USDA report:</h4>
+<ul>
+<li>GPS-based mapping systems (including yield monitor and soil/yield mapping).</li>
+<li>Guidance or auto-steer systems.</li>
+<li>Variable-rate technology (VRT) for applying inputs.</li>
+</ul>
+</div>
+<div id="report-findings" class="section level4">
+<h4>Report findings:</h4>
+<ul>
+<li>GPS- based mapping system are the most widely adopted, used on about half of all corn (2010) and soybean (2012).</li>
+<li>guidance or auto-steer systems are used on about a third of those farms and GPS-based yield mapping on a quarter.</li>
+<li>Soil mapping using GPS coordinates and VRT are used on 16 to 26 percent
+of these farms.</li>
+<li>Larger farms are more likely to adopt these technologies.</li>
+<li>Hired labor costs are 60 to 70 percent lower with any of the three PA technologies on small corn farms (140-400 cropland acres), while hired labor costs are higher on large farms that have adopted precision mapping and guidance.</li>
+<li>When yield goals are higher,
+farmers may already be close to the production potential for their land, whereas farmers with lower yield goals may be using the technologies to try to raise yields on land known to be less productive.</li>
+<li>A bigger stock of machinery on corn farms has a negative effect on VRT adoption, possibly because of higher overhead costs, and less flexibility in taking on new capital outlays.</li>
+<li><strong>All three technologies have small positive impacts on both net returns (including overhead expenses) and operating profits for a U.S. corn farm of average size</strong></li>
+<li><strong>Corn and soybeans have had higher shares of acreage using yield mapping than other crops,but use of yield maps has increased for peanuts, rice, and spring wheat as well.</strong></li>
+</ul>
+</div>
+<div id="note-to-startups-who-are-reading-this-blog" class="section level4">
+<h4>Note to Startups who are reading this blog</h4>
+<p>The Israeli precision agriculture Startups facing a very difficult mission - develop products that will have significant impact on the farm profitability.</p>
+<p>In order to do it, they will have to choose a specific field/area of farming and to tackle it with the best tools available.</p>
+<p>I would be happy to help you :)</p>
+</div>
+</div>

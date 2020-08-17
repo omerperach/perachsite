@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="generator" content="Hugo 0.72.0" />
+
+  <title>How to Analyse USA Farms with ARMS API &middot; Omer Perach</title>
+
+    
+
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css">
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="/css/side-menu.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="/css/blackburn.css">
+
+  
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+ 
+  
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/androidstudio.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+
+  
+  
+
+</head>
+
+
+<body>
+<div id="layout">
+
+  
+<a href="#menu" id="menuLink" class="menu-link">
+  
+  <span></span>
+</a>
+<div id="menu">
+
+  
+  <a class="pure-menu-heading brand" href="/">Perach</a>
+
+
+  <div class="pure-menu">
+    <ul class="pure-menu-list">
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="/"><i class='fa fa-home fa-fw'></i>Home</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="/about/"><i class='fa fa-user fa-fw'></i>About</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="/contact/"><i class='fa fa-phone fa-fw'></i>Contact</a>
+      
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="pure-menu social">
+  <ul class="pure-menu-list">
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://twitter.com/OmerPerach" rel="me" target="_blank"><i class="fab fa-twitter-square fa-fw"></i>Twitter</a>
+    </li>
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://facebook.com/Omer%20Perach" rel="me" target="_blank"><i class="fab fa-facebook-square fa-fw"></i>Facebook</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://instagram.com/*" rel="me" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://linkedin.com/in/Omer%20Perach" rel="me" target="_blank"><i class="fab fa-linkedin"></i></i>LinkedIn</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://github.com/omerperach" rel="me" target="_blank"><i class="fab fa-github-square fa-fw"></i>GitHub</a>
+    </li>
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://stackoverflow.com/users/*" rel="me" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Stack Overflow</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  </ul>
+</div>
+
+
+  <div>
+  <div class="small-print">
+    <small>&copy; 2016. All rights reserved.</small>
+  </div>
+  <div class="small-print">
+    <small>Built with&nbsp;<a href="https://gohugo.io/" target="_blank">Hugo</a></small>
+    <small>Theme&nbsp;<a href="https://github.com/yoshiharuyamashita/blackburn" target="_blank">Blackburn</a></small>
+  </div>
+</div>
+
+</div>
+
+
+  <div id="main">
+
+
+<div class="header">
+  <h1>How to Analyse USA Farms with ARMS API</h1>
+  <h2></h2>
+</div>
+<div class="content">
+
+  <div class="post-meta">
+
+  <div>
+    <i class="fa fa-calendar fa-fw"></i>
+    <time>13 Aug 2020, 00:00</time>
+  </div>
+
+  
+
+  
+  
+  
+  
+
+  
+  
+  
+  <div>
+    <i class="fa fa-tags fa-fw"></i>
+    
+      <a class="post-taxonomy-tag" href="/tags/business">Business</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="/tags/farming">Farming</a>
+    
+  </div>
+  
+  
+
+</div>
+
+  
+
+
+<p>The united states department of agriculture published a <a href="https://www.ers.usda.gov/webdocs/publications/80326/err-217.pdf?v=4266">report</a> (Oct-2016) which assessed the adoption of precision agriculture (PA) technologies by farmers in addition to how it impact the farm profit.</p>
+<p><strong>The bottom line - The impact of these PA technologies on profits for U.S. corn producers is positive, but small.</strong></p>
+<p>There is a big hype in precision agriculture technologies and many Israeli start-ups working in that field.</p>
+<div id="some-israeli-startups-in-the-field-of-precision-agriculture" class="section level3">
+<h3>Some Israeli startups in the field of precision agriculture</h3>
+<ul>
+<li>Prospera</li>
+<li>Taranis</li>
+<li>Viridix</li>
+<li>Cropx</li>
+<li>SeeTree</li>
+<li>Trieye</li>
+<li>Farmigo</li>
+<li>Saturas</li>
+</ul>
+</div>
+<div id="the-blog-will" class="section level3">
+<h3>The blog will:</h3>
+<ol style="list-style-type: decimal">
+<li>Show you how to query the ARMS database with <strong>rarms</strong> package in order undertand the USA farm industry - if you wish to penetrate that market.</li>
+<li>Provide valuable insights to Israeli start-ups from the USDA <a href="https://www.ers.usda.gov/webdocs/publications/80326/err-217.pdf?v=4266">report</a> and other important <a href="https://www.sciencedirect.com/science/article/pii/S0308521X16305418#gr1">research</a>.</li>
+</ol>
+</div>
+<div id="get-a-key-and-install-the-rarms-package" class="section level3">
+<h3>Get a key and install the rarms package</h3>
+<ol style="list-style-type: decimal">
+<li>First of all you should receive a key from this <a href="https://api.data.gov/signup/">link</a>.</li>
+<li>Install and load <strong>rarms</strong> package which helps us in the query.</li>
+</ol>
+</div>
+<div id="the-arms-experts-aggregated-a-three-phase-survey-happening-during-each-year-into-eight-reports" class="section level3">
+<h3>The ARMS experts aggregated a three phase survey happening during each year into eight reports:</h3>
+<ul>
+<li>Farm Business Balance Sheet</li>
+<li>Farm Business Income Statement</li>
+<li>Farm Business Financial Ratios</li>
+<li>Structural Characteristics</li>
+<li>Farm Business Debt Repayment Capacity</li>
+<li>Government Payments</li>
+<li>Operator Household Income</li>
+<li>Operator Household Balance Sheet</li>
+</ul>
+</div>
+<div id="variables" class="section level3">
+<h3>Variables</h3>
+<p>Each report have its own variables which can be find in the next <a href="https://www.ers.usda.gov/media/10447/arms-all-variables-december-2019.csv">link</a>. The variables have shortcut name build from letters.</p>
+</div>
+<div id="six-categories" class="section level3">
+<h3>Six Categories</h3>
+<ul>
+<li>Economic Class (sal)</li>
+<li>Farm Typology (ftyppl)</li>
+<li>Operator age (age)</li>
+<li>Farm Resource Region (reg)</li>
+<li>NASS region (n5reg)</li>
+<li>Production Specialty (spec)</li>
+</ul>
+</div>
+<div id="lets-query-with-the-following-paameters" class="section level3">
+<h3>Let’s query with the following paameters</h3>
+<ol style="list-style-type: decimal">
+<li>Years 2015-2018.</li>
+<li>All USA states.</li>
+<li>Category Economic class.</li>
+<li>Variable: expenses for purchases of seeds, plants, and related expenses such as seed cleaning, inoculation, rooting hormones, bagging, germinating, and delinting.</li>
+</ol>
+<pre class="r"><code>query_plant_seed &lt;- armsRequest(year = c(2012:2018), state = NULL, category = c(&#39;spec&#39;),report = c(2), variable = c(&#39;evseedp&#39;), farmtype = &#39;all farms&#39;)
+df_plant_seed&lt;-query_plant_seed$data #assigning the list data to data.frame
+df_plant_seed%&gt;%ggplot(aes(x=year,y=estimate/1000,color=category_value))+geom_line(size=1)+scale_color_viridis(discrete = T,&quot;Production Specialty&quot;)+labs(title = &quot;Seed and Plants Expenses&quot;)+xlab(&quot;Years&quot;)+ylab(&quot;Dollars per farm [$000]&quot;)</code></pre>
+<p><img src="/post/2020-08-13-farm-profits-and-adoption-of-precision-agriculture_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>target&lt;-c(&quot;Corn&quot;,&quot;Soybean&quot;,&quot;Tobacco, Cotton, Peanuts&quot;,&quot;Wheat&quot;,&quot;Specialty Crops (F,V,N)&quot;)
+df_only_plant&lt;-df_plant_seed%&gt;%filter(category_value %in% target)
+df_only_plant%&gt;%ggplot(aes(x=year,y=estimate/1000,color=category_value))+geom_line(size=1)+scale_color_viridis(discrete = T,&quot;Production Specialty&quot;)+labs(title = &quot;Seed and Plants Expenses&quot;)+xlab(&quot;Years&quot;)+ylab(&quot;Dollars per farm [$000]&quot;)</code></pre>
+<p><img src="/post/2020-08-13-farm-profits-and-adoption-of-precision-agriculture_files/figure-html/unnamed-chunk-2-2.png" width="672" />
+We can now look on the same category but on different value, for example, the Fertilizer and chemicals (Amount the farm operation paid for commercial fertilizers, lime and soil conditioners, pesticides, insecticides, herbicides, fungicides, defoliants, nematicides, fumigants, growth regulators, and rodenticides used on crops, pasture, acreage idled under government programs, seeds, crop storage buildings or seed beds.):</p>
+<pre class="r"><code>query_chemicals &lt;- armsRequest(year = c(2012:2018), state = NULL, category = c(&#39;spec&#39;),report = c(2), variable = c(&#39;evfertc&#39;), farmtype = &#39;all farms&#39;)
+df_chemicals&lt;-query_chemicals$data
+target&lt;-c(&quot;Corn&quot;,&quot;Soybean&quot;,&quot;Tobacco, Cotton, Peanuts&quot;,&quot;Wheat&quot;,&quot;Specialty Crops (F,V,N)&quot;)
+df_only_plant_chemicals&lt;-df_chemicals%&gt;%filter(category_value %in% target)
+df_only_plant_chemicals%&gt;%ggplot(aes(x=year,y=estimate/1000,color=category_value))+geom_line(size=1)+scale_color_viridis(discrete = T,&quot;Production Specialty&quot;)+labs(title = &quot;Chemicals and Fertilizers Expenses&quot;)+xlab(&quot;Years&quot;)+ylab(&quot;Dollars per farm [$000]&quot;)</code></pre>
+<p><img src="/post/2020-08-13-farm-profits-and-adoption-of-precision-agriculture_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>In these two queries and graph we can start to understand the complexity and the multidimensional landscape of the USA farming industry.</p>
+</div>
+<div id="some-thoughts-on-the-above-graphs-in-relate-to-israeli-startups" class="section level3">
+<h3>Some thoughts on the above graphs in relate to Israeli startups:</h3>
+<ul>
+<li>By delving deeper into the reports data we can understand trends in farm financial parameters that could assist us to search for potential customers.</li>
+<li>Same approach can be used to improve our product market fit.</li>
+<li>I do not know how the Coronavirus pandemic will influence the status but we must take it into our considerations.</li>
+</ul>
+</div>
+<div id="the-report-about-precision-agriculture-pa-technology-adoption-by-us-farms-and-additional-reccomendations-for-precision-agriculture-startups" class="section level3">
+<h3>The report about precision agriculture (PA) technology adoption by US farms and additional reccomendations for precision agriculture startups</h3>
+<div id="research-on-how-to-better-design-decision-support-tool-for-farmers" class="section level4">
+<h4>Research on how to better design decision support tool for farmers</h4>
+<p>I would like to integrate the report together with a <a href="https://www.sciencedirect.com/science/article/pii/S0308521X16305418#gr1">research</a> done in the UK named <strong>Decision support tools for agriculture: Towards effective design and delivery</strong>.</p>
+</div>
+<div id="research-most-important-findings" class="section level4">
+<h4>Research most important findings:</h4>
+<ul>
+<li>Product that will succeed in the following categories for the farmers will win:
+<ul>
+<li>Financial Performance for the farmers.</li>
+<li>Ease of use.</li>
+<li>Other farmers recommendations.</li>
+<li>Trust - collaborate with agriculture trusted firms, it is still a traditional industry.</li>
+<li>Cost for the farmer - straight forward reason.</li>
+<li>Habit - look into younger generation farmers.</li>
+<li>Relevant for the user - be careful with standard product, it need to be relevant for the specific user.</li>
+<li>Farmer adviser-comptability - farmers consulting with advisers, you should think about it when you build the product.</li>
+</ul></li>
+</ul>
+</div>
+<div id="three-types-of-pa-technologies-were-examined-in-the-usda-report" class="section level4">
+<h4>Three types of PA technologies were examined in the USDA report:</h4>
+<ul>
+<li>GPS-based mapping systems (including yield monitor and soil/yield mapping).</li>
+<li>Guidance or auto-steer systems.</li>
+<li>Variable-rate technology (VRT) for applying inputs.</li>
+</ul>
+</div>
+<div id="report-findings" class="section level4">
+<h4>Report findings:</h4>
+<ul>
+<li>GPS- based mapping system are the most widely adopted, used on about half of all corn (2010) and soybean (2012).</li>
+<li>guidance or auto-steer systems are used on about a third of those farms and GPS-based yield mapping on a quarter.</li>
+<li>Soil mapping using GPS coordinates and VRT are used on 16 to 26 percent
+of these farms.</li>
+<li>Larger farms are more likely to adopt these technologies.</li>
+<li>Hired labor costs are 60 to 70 percent lower with any of the three PA technologies on small corn farms (140-400 cropland acres), while hired labor costs are higher on large farms that have adopted precision mapping and guidance.</li>
+<li>When yield goals are higher,
+farmers may already be close to the production potential for their land, whereas farmers with lower yield goals may be using the technologies to try to raise yields on land known to be less productive.</li>
+<li>A bigger stock of machinery on corn farms has a negative effect on VRT adoption, possibly because of higher overhead costs, and less flexibility in taking on new capital outlays.</li>
+<li><strong>All three technologies have small positive impacts on both net returns (including overhead expenses) and operating profits for a U.S. corn farm of average size</strong></li>
+<li><strong>Corn and soybeans have had higher shares of acreage using yield mapping than other crops,but use of yield maps has increased for peanuts, rice, and spring wheat as well.</strong></li>
+</ul>
+</div>
+<div id="note-to-startups-who-are-reading-this-blog" class="section level4">
+<h4>Note to Startups who are reading this blog</h4>
+<p>The Israeli precision agriculture Startups facing a very difficult mission - develop products that will have significant impact on the farm profitability.</p>
+<p>In order to do it, they will have to choose a specific field/area of farming and to tackle it with the best tools available.</p>
+<p>I would be happy to help you :)</p>
+</div>
+</div>
+
+  
+  <h4><i class="fa-share-alt" aria-hidden="true"></i>&nbsp;Share!</h4>
+<ul class="share-buttons">
+	<li><a href="https://www.facebook.com/sharer/sharer.php?u=%2fpost%2ffarm-profits-and-adoption-of-precision-agriculture%2f" target="_blank" title="Share on Facebook"><i class="fa-facebook" aria-hidden="true"></i><span class="sr-only">Share on Facebook</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="https://twitter.com/intent/tweet?source=%2fpost%2ffarm-profits-and-adoption-of-precision-agriculture%2f&via=HorribleGeek" target="_blank" title="Tweet"><i class="fa-twitter" aria-hidden="true"></i><span class="sr-only">Tweet</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="https://plus.google.com/share?url=%2fpost%2ffarm-profits-and-adoption-of-precision-agriculture%2f" target="_blank" title="Share on Google+"><i class="fa-google-plus" aria-hidden="true"></i><span class="sr-only">Share on Google+</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://www.tumblr.com/share?v=3&u=%2fpost%2ffarm-profits-and-adoption-of-precision-agriculture%2f" target="_blank" title="Post to Tumblr"><i class="fa-tumblr" aria-hidden="true"></i><span class="sr-only">Post to Tumblr</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://pinterest.com/pin/create/button/?url=%2fpost%2ffarm-profits-and-adoption-of-precision-agriculture%2f" target="_blank" title="Pin it"><i class="fa-pinterest-p" aria-hidden="true"></i><span class="sr-only">Pin it</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://www.reddit.com/submit?url=%2fpost%2ffarm-profits-and-adoption-of-precision-agriculture%2f" target="_blank" title="Submit to Reddit"><i class="fa-reddit-alien" aria-hidden="true"></i><span class="sr-only">Submit to Reddit</span></a>
+	</li>
+</ul>
+
+
+<style>
+	ul.share-buttons{
+	  list-style: none;
+	  padding: 0;
+	}
+
+	ul.share-buttons li{
+	  display: inline;
+	}
+
+	ul.share-buttons .sr-only{
+	  position: absolute;
+	  clip: rect(1px 1px 1px 1px);
+	  clip: rect(1px, 1px, 1px, 1px);
+	  padding: 0;
+	  border: 0;
+	  height: 1px;
+	  width: 1px;
+	  overflow: hidden;
+	}
+</style>
+
+
+  
+<div class="prev-next-post pure-g">
+  <div class="pure-u-1-24" style="text-align: left;">
+    
+    <a href="/post/2020-07-06-pre-seed-early-stage-saas-startup-business-modeling/"><i class="fa fa-chevron-left"></i></a>
+    
+  </div>
+  <div class="pure-u-10-24">
+    
+    <nav class="prev">
+      <a href="/post/2020-07-06-pre-seed-early-stage-saas-startup-business-modeling/">GenoSee Business Model</a>
+    </nav>
+    
+  </div>
+  <div class="pure-u-2-24">
+    &nbsp;
+  </div>
+  <div class="pure-u-10-24">
+    
+  </div>
+  <div class="pure-u-1-24" style="text-align: right;">
+    
+  </div>
+</div>
+
+
+
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'Your Disqus shortname';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+</div>
+
+</div>
+</div>
+<script src="/js/ui.js"></script>
+<script src="/js/menus.js"></script>
+
+
+<script>
+  
+  if (window.location.hostname != "localhost") {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'Your Google Analytics tracking ID', 'auto');
+    ga('send', 'pageview');
+  }
+</script>
+
+
+
+
+
+<script src="/js/math-code.js"></script>
+  <script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  
+
+
+</body>
+</html>
+

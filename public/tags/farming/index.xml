@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Farming on Omer Perach</title>
+    <link>/tags/farming/</link>
+    <description>Recent content in Farming on Omer Perach</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <lastBuildDate>Thu, 13 Aug 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/farming/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>How to Analyse USA Farms with ARMS API</title>
+      <link>/post/farm-profits-and-adoption-of-precision-agriculture/</link>
+      <pubDate>Thu, 13 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/farm-profits-and-adoption-of-precision-agriculture/</guid>
+      <description>The united states department of agriculture published a report (Oct-2016) which assessed the adoption of precision agriculture (PA) technologies by farmers in addition to how it impact the farm profit.
+The bottom line - The impact of these PA technologies on profits for U.S. corn producers is positive, but small.
+There is a big hype in precision agriculture technologies and many Israeli start-ups working in that field.
+Some Israeli startups in the field of precision agricultureProsperaTaranisViridixCropxSeeTreeTrieyeFarmigoSaturasThe blog will:Show you how to query the ARMS database with rarms package in order undertand the USA farm industry - if you wish to penetrate that market.</description>
+    </item>
+    
+  </channel>
+</rss>

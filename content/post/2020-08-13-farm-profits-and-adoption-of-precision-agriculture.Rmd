@@ -1,0 +1,154 @@
+---
+title: "How to Analyse USA Farms with ARMS API"
+author: "Omer Perach"
+date: '2020-08-13'
+slug: farm-profits-and-adoption-of-precision-agriculture
+categories: []
+tags:
+- Business
+- Farming
+description: ''
+topics: []
+---
+The united states department of agriculture published a [report](https://www.ers.usda.gov/webdocs/publications/80326/err-217.pdf?v=4266) (Oct-2016) which assessed the adoption of precision agriculture (PA) technologies by farmers in addition to how it impact the farm profit.
+
+**The bottom line - The impact of these PA technologies on profits for U.S. corn producers is positive, but small.**
+
+There is a big hype in precision agriculture technologies and many Israeli start-ups working in that field.
+
+### Some Israeli startups in the field of precision agriculture
++ Prospera
++ Taranis
++ Viridix
++ Cropx
++ SeeTree
++ Trieye
++ Farmigo
++ Saturas
+
+### The blog will:
+
+1. Show you how to query the ARMS database with **rarms** package in order undertand the USA farm industry - if you wish to penetrate that market.
+2. Provide valuable insights to Israeli start-ups from the USDA [report](https://www.ers.usda.gov/webdocs/publications/80326/err-217.pdf?v=4266) and other important [research](https://www.sciencedirect.com/science/article/pii/S0308521X16305418#gr1).
+
+
+### Get a key and install the rarms package
+
+1. First of all you should receive a key from this [link](https://api.data.gov/signup/).
+2. Install and load **rarms** package which helps us in the query.
+
+```{r include=FALSE}
+rm(list = ls())
+library(dplyr)
+library(ggplot2)
+library(rarms)
+library(viridis)
+key <- "1GmZBUls0OeqXr8zJUcw5J4UDMpFM4xUNwAqHg1u"
+```
+
+### The ARMS experts aggregated a three phase survey happening during each year into eight reports:
++ Farm Business Balance Sheet
++ Farm Business Income Statement
++ Farm Business Financial Ratios
++ Structural Characteristics
++ Farm Business Debt Repayment Capacity
++ Government Payments
++ Operator Household Income
++ Operator Household Balance Sheet
+
+### Variables 
+
+Each report have its own variables which can be find in the next [link](https://www.ers.usda.gov/media/10447/arms-all-variables-december-2019.csv). The variables have shortcut name build from letters. 
+
+### Six Categories
+
++ Economic Class (sal)
++ Farm Typology (ftyppl)
++ Operator age (age)
++ Farm Resource Region (reg)
++ NASS region (n5reg)
++ Production Specialty (spec)
+
+### Let's query with the following paameters
+
+1. Years 2015-2018.
+2. All USA states.
+3. Category Economic class.
+4. Variable: expenses for purchases of seeds, plants, and related expenses such as seed cleaning, inoculation, rooting hormones, bagging, germinating, and delinting.
+
+
+```{r}
+query_plant_seed <- armsRequest(year = c(2012:2018), state = NULL, category = c('spec'),report = c(2), variable = c('evseedp'), farmtype = 'all farms')
+df_plant_seed<-query_plant_seed$data #assigning the list data to data.frame
+df_plant_seed%>%ggplot(aes(x=year,y=estimate/1000,color=category_value))+geom_line(size=1)+scale_color_viridis(discrete = T,"Production Specialty")+labs(title = "Seed and Plants Expenses")+xlab("Years")+ylab("Dollars per farm [$000]")
+target<-c("Corn","Soybean","Tobacco, Cotton, Peanuts","Wheat","Specialty Crops (F,V,N)")
+df_only_plant<-df_plant_seed%>%filter(category_value %in% target)
+df_only_plant%>%ggplot(aes(x=year,y=estimate/1000,color=category_value))+geom_line(size=1)+scale_color_viridis(discrete = T,"Production Specialty")+labs(title = "Seed and Plants Expenses")+xlab("Years")+ylab("Dollars per farm [$000]")
+```
+We can now look on the same category but on different value, for example, the Fertilizer and chemicals (Amount the farm operation paid for commercial fertilizers, lime and soil conditioners, pesticides, insecticides, herbicides, fungicides, defoliants, nematicides, fumigants, growth regulators, and rodenticides used on crops, pasture, acreage idled under government programs, seeds, crop storage buildings or seed beds.):
+
+```{r}
+query_chemicals <- armsRequest(year = c(2012:2018), state = NULL, category = c('spec'),report = c(2), variable = c('evfertc'), farmtype = 'all farms')
+df_chemicals<-query_chemicals$data
+target<-c("Corn","Soybean","Tobacco, Cotton, Peanuts","Wheat","Specialty Crops (F,V,N)")
+df_only_plant_chemicals<-df_chemicals%>%filter(category_value %in% target)
+df_only_plant_chemicals%>%ggplot(aes(x=year,y=estimate/1000,color=category_value))+geom_line(size=1)+scale_color_viridis(discrete = T,"Production Specialty")+labs(title = "Chemicals and Fertilizers Expenses")+xlab("Years")+ylab("Dollars per farm [$000]")
+```
+
+In these two queries and graph we can start to understand the complexity and the multidimensional landscape of the USA farming industry.
+
+### Some thoughts on the above graphs in relate to Israeli startups:
+
++ By delving deeper into the reports data we can understand trends in farm financial parameters that could assist us to search for potential customers.
++ Same approach can be used to improve our product market fit. 
++ I do not know how the Coronavirus pandemic will influence the status but we must take it into our considerations. 
+
+### The report about precision agriculture (PA) technology adoption by US farms and additional reccomendations for precision agriculture startups
+
+#### Research on how to better design decision support tool for farmers
+
+I would like to integrate the report together with a [research](https://www.sciencedirect.com/science/article/pii/S0308521X16305418#gr1) done in the UK named **Decision support tools for agriculture: Towards effective design and delivery**.
+
+#### Research most important findings:
++ Product that will succeed in the following categories for the farmers will win:
+  + Financial Performance for the farmers.
+  + Ease of use.
+  + Other farmers recommendations.
+  + Trust - collaborate with agriculture trusted firms, it is still a traditional industry.
+  + Cost for the farmer - straight forward reason.
+  + Habit - look into younger generation farmers.
+  + Relevant for the user - be careful with standard product, it need to be relevant for the specific user.
+  + Farmer adviser-comptability - farmers consulting with advisers, you should think about it when you build the product.
+  
+
+
+#### Three types of PA technologies were examined in the USDA report:
+  + GPS-based mapping systems (including yield monitor and soil/yield mapping).
+  + Guidance or auto-steer systems.
+  + Variable-rate technology (VRT) for applying inputs.
+  
+#### Report findings:
+  + GPS- based mapping system are the most widely adopted, used on about half of all corn (2010) and soybean (2012).
+  +  guidance or auto-steer systems are used on about a third of those farms and GPS-based yield mapping on a quarter.
+  + Soil mapping using GPS coordinates and VRT are used on 16 to 26 percent
+of these farms.
+  +  Larger farms are more likely to adopt these technologies.
+  + Hired labor costs are 60 to 70 percent lower with any of the three PA technologies on small corn farms (140-400 cropland acres), while hired labor costs are higher on large farms that have adopted precision mapping and guidance.
+  + When yield goals are higher,
+farmers may already be close to the production potential for their land, whereas farmers with lower yield goals may be using the technologies to try to raise yields on land known to be less productive.
+  + A bigger stock of machinery on corn farms has a negative effect on VRT adoption, possibly because of higher overhead costs, and less flexibility in taking on new capital outlays.
+  + **All three technologies have small positive impacts on both net returns (including overhead expenses) and operating profits for a U.S. corn farm of average size**
+  + **Corn and soybeans have had higher shares of acreage using yield mapping than other crops,but use of yield maps has increased for peanuts, rice, and spring wheat as well.**
+  
+#### Note to Startups who are reading this blog
+
+The Israeli precision agriculture Startups facing a very difficult mission - develop products that will have significant impact on the farm profitability. 
+
+In order to do it, they will have to choose a specific field/area of farming and to tackle it with the best tools available.
+
+I would be happy to help you :) 
+
+
+
+
+
