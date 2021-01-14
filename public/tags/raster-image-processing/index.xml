@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Raster Image Processing on Omer Perach</title>
+    <link>/tags/raster-image-processing/</link>
+    <description>Recent content in Raster Image Processing on Omer Perach</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <lastBuildDate>Thu, 14 Jan 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/raster-image-processing/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Looking on your home from space</title>
+      <link>/post/looking-on-your-home-from-space/</link>
+      <pubDate>Thu, 14 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/post/looking-on-your-home-from-space/</guid>
+      <description>The incentiveIf you do not know it, there are satellites in the sky:)
+I am joking, most of us are aware about it, but I don’t think that most of us are aware that satellites traveling in the sky and taking pictures that we could download and process.
+This post is to teach you how to download data from a satellite called Sentinel and to process it
+How to dowanload the imagesThere are bunch of R packages that can help you to download images from many free satellites such as:</description>
+    </item>
+    
+  </channel>
+</rss>

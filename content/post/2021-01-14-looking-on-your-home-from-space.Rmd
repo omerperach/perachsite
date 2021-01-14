@@ -1,0 +1,60 @@
+---
+title: Looking on your home from space
+author: Omer Perach
+date: '2021-01-14'
+slug: looking-on-your-home-from-space
+categories: []
+tags:
+  - Remote Sensing
+  - Raster Image Processing
+  - Vegetative Index
+description: ''
+topics: []
+---
+
+# The incentive 
+If you do not know it, there are satellites in the sky:)\
+I am joking, most of us are aware about it, but I don't think that most of us are aware that satellites traveling in the sky and taking pictures that we could download and process.\
+**This post is to teach you how to download data from a satellite called Sentinel and to process it**
+
+# How to dowanload the images
+There are bunch of R packages that can help you to download images from many free satellites such as:\
+1. RGIStools\
+2. getspatialdata\
+3. sen2r (only for Sentinel)\
+I used sen2r to download the images.
+what I love in sent2 is the shiny GUI interface they build in order to help you download the data. I will suggest you to read this [link](https://www.sciencedirect.com/science/article/pii/S0098300419304893?via%3Dihub) - it explaining the basic information for knowing how to use it.
+I will not go into it in this post but if you would like me to elaborate on it, please contact me.\
+Let's assume that you read the instructions and you already download the pictures into your compute.
+
+# Reading the pictures
+We will use the *raster* package and basically each picture is a multylayer of all the bends, sen2R 
+```{r}
+library(raster)
+library(rasterVis)
+pic_21<-stack("S2A2A_20201221_121_sen2r_BOA_10.tif")
+pic_26<-stack("S2B2A_20201226_121_sen2r_BOA_10.tif")
+pic_31<-stack("S2A2A_20201231_121_sen2r_BOA_10.tif")
+```
+
+## Band ordered when downloaded with the package:
+1. - 442.7 nm (Coastal aerosol)
+2. - 492.4 nm (blue)
+3. - 559.8 nm (Green)
+4. - 664.6 nm (Red)
+5. - 704.1 nm (Vegetation Red Edge)
+6. - 740.5 nm (Vegetation Red Edge)
+7. - 782.8 nm (Vegetation Red Edge)
+8. - 832.8 nm (below 20m rsolution)/864.7 nm (above 20m resolution) (Nir)/ (Vegetation Red Edge)
+9. - 945.1 nm (Water vapour)
+10. - 1613.7 nm (SWIR)
+11. - 2202.4 nm (SWIR)
+Let's print RGB pictures just to see.
+We will start by adding names to the specific bands
+```{r}
+pic_1_RGB<-subset(pic_1,c("b2","b3","b4"))
+pic_2_RGB<-subset(pic_2,c("b2","b3","b4"))
+pic_3_RGB<-subset(pic_2,c("b2","b3","b4"))
+```
+
+
