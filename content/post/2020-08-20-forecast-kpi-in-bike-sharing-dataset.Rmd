@@ -1,0 +1,87 @@
+---
+title: "Statistical Learning and KPI"
+author: Omer Perach
+date: '2020-08-20'
+slug: forecast-kpi-in-bike-sharing-dataset
+categories: []
+tags:
+  - Data Science
+  - Study
+  - Learning
+description: ''
+topics: []
+---
+### Going back to a time series bike sharing dataset
+
+During my MBA studies we received a final project in *Exploratory data analysis* course. The project was on a data set of a bike sharing. It is quite a famous data set that **contains the hourly count of rental bikes between years 2011 and 2012 in Capital bikeshare system with the corresponding weather and seasonal information.**
+
+The course instructors want us to focus mainly on the exploratory data analysis of the data set and to try to infer important insight on each variable and their interaction with each other in order to make the best prediction model. 
+The instructors arrange the data as follows, the first half of the month for the two consecutive years 2011 and 2012 given to us as the training set while they ask us to predict the next three days in each month (16,17,18).
+
+### The training data set
+
+```{r include=FALSE}
+library(dplyr)
+library(readr)
+library(ggplot2)
+```
+```{r}
+rm(list=ls())
+train<-read.csv("bike_train.csv")
+```
+
+### Let's define the datetime variable to time format
+```{r}
+library(lubridate)
+train$datetime<-ymd_hms(train$datetime)
+train_test<-sample(c("train","test"),8600,replace = T,prob = c(0.8,0.2))
+train$train_test<-train_test
+```
+
+### Let's see the data variable by variable
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+train$month<-lubridate::month(train$datetime)
+train$year<-lubridate::year(train$datetime)
+train$month<-as.character(train$month)
+train$year<-as.character(train$year)
+month_grouped<-train%>%group_by(month,year)
+aver_month<-summarise(month_grouped,av=mean(count),summ=sum(count))
+aver_month$month_year<-paste(aver_month$month,aver_month$year,sep="_")
+aver_month$month_year<-factor(aver_month$month_year,levels=c("1_2011","1_2012","2_2011","2_2012","3_2011","3_2012","4_2011","4_2012","5_2011","5_2012","6_2011","6_2012","7_2011","7_2012","8_2011","8_2012","9_2011","9_2012","10_2011","10_2012","11_2011","11_2012","12_2011","12_2012"))
+aver_month%>%ggplot(aes(y=av,x=month_year))+geom_bar(stat = "identity")+theme(axis.text.x=element_text(angle=45, hjust=1))+xlab("Month_year")+ylab("Rentals number")+ggtitle("Average rentals per hour for month")
+aver_month%>%ggplot(aes(y=summ,x=month_year))+geom_bar(stat = "identity")+theme(axis.text.x=element_text(angle=45, hjust=1))+xlab("Month_year")+ylab("Rentals number")+ggtitle("Total rentals per month")
+head(train)
+```
+
+
+### Focusing on KPI: RMSE, MAE, MAPE, Bias and MSE
+
+We will start now by creating functions for each KPI
+```{r}
+# Average error
+bias_av<-function(actual,prediction){
+  bias<-mean(prediction-actual)
+  return(bias)
+}
+#Mean absolute percentage error
+mape<-function(actual,prediction){
+  mape<-mean(abs((prediction-actual)/actual))*100
+  return(mape)
+}
+# Mean absolute error
+eme<-function(actual,prediction){
+  mae<-mean(abs(prediction-actual))
+  return(mae)
+}
+# Root mean squared error
+aremse<-function(actual,prediction){
+  rmse<-sqrt(mean((prediction-actual)^2))
+  return(rmse)
+}
+# Mean squared error
+emese<-function(actual,prediction){
+  mse<-mean((prediction-actual)^2)
+  return((mse))
+}
+```
+

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Data Science on Omer Perach</title>
-    <link>/tags/data-science/</link>
-    <description>Recent content in Data Science on Omer Perach</description>
+    <title>Learning on Omer Perach</title>
+    <link>/tags/learning/</link>
+    <description>Recent content in Learning on Omer Perach</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
     <lastBuildDate>Thu, 20 Aug 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/data-science/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/learning/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -20,15 +20,6 @@
       <guid>/post/forecast-kpi-in-bike-sharing-dataset/</guid>
       <description>Going back to a time series bike sharing datasetDuring my MBA studies we received a final project in Exploratory data analysis course. The project was on a data set of a bike sharing. It is quite a famous data set that contains the hourly count of rental bikes between years 2011 and 2012 in Capital bikeshare system with the corresponding weather and seasonal information.
 The course instructors want us to focus mainly on the exploratory data analysis of the data set and to try to infer important insight on each variable and their interaction with each other in order to make the best prediction model.</description>
-    </item>
-    
-    <item>
-      <title>Syngenta Models Cont. </title>
-      <link>/post/syngenta-models-cont/</link>
-      <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/post/syngenta-models-cont/</guid>
-      <description>set.seed(42)h2o.init()## Connection successful!## ## R is connected to the H2O cluster: ## H2O cluster uptime: 15 minutes 32 seconds ## H2O cluster timezone: Asia/Jerusalem ## H2O data parsing timezone: UTC ## H2O cluster version: 3.30.0.1 ## H2O cluster version age: 3 months and 26 days !!! ## H2O cluster name: H2O_started_from_R_Omer_qea893 ## H2O cluster total nodes: 1 ## H2O cluster total memory: 0.23 GB ## H2O cluster total cores: 4 ## H2O cluster allowed cores: 4 ## H2O cluster healthy: TRUE ## H2O Connection ip: localhost ## H2O Connection port: 54321 ## H2O Connection proxy: NA ## H2O Internal Security: FALSE ## H2O API Extensions: Amazon S3, Algos, AutoML, Core V3, TargetEncoder, Core V4 ## R Version: R version 4.</description>
     </item>
     
   </channel>

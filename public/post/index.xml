@@ -7,10 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <lastBuildDate>Thu, 13 Aug 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Sep 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Dolomite Alta Via 1 - ready, steady, go!</title>
+      <link>/post/dolomite-alta-via-1-ready-steady-go/</link>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/dolomite-alta-via-1-ready-steady-go/</guid>
+      <description>I love trekking and I love to check geographical maps while doing it. Lately I encountered an R package named rayshader and I overwhelmed from its ability to create beautiful 3D map visualization in R. This tutorial goal is to download tif satellite pictures and to show the Dolomite Alta Via 1 trek 3D path with **rayshader* package.</description>
+    </item>
+    
+    <item>
+      <title>Statistical Learning and KPI</title>
+      <link>/post/forecast-kpi-in-bike-sharing-dataset/</link>
+      <pubDate>Thu, 20 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/forecast-kpi-in-bike-sharing-dataset/</guid>
+      <description>Going back to a time series bike sharing datasetDuring my MBA studies we received a final project in Exploratory data analysis course. The project was on a data set of a bike sharing. It is quite a famous data set that contains the hourly count of rental bikes between years 2011 and 2012 in Capital bikeshare system with the corresponding weather and seasonal information.
+The course instructors want us to focus mainly on the exploratory data analysis of the data set and to try to infer important insight on each variable and their interaction with each other in order to make the best prediction model.</description>
+    </item>
     
     <item>
       <title>Israeli Precision Agriculture Startups  - this post is for you</title>

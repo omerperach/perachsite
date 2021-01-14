@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spatial Analysis on Omer Perach</title>
+    <link>/tags/spatial-analysis/</link>
+    <description>Recent content in Spatial Analysis on Omer Perach</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
+    <lastBuildDate>Mon, 14 Sep 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/spatial-analysis/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Dolomite Alta Via 1 - ready, steady, go!</title>
+      <link>/post/dolomite-alta-via-1-ready-steady-go/</link>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/dolomite-alta-via-1-ready-steady-go/</guid>
+      <description>I love trekking and I love to check geographical maps while doing it. Lately I encountered an R package named rayshader and I overwhelmed from its ability to create beautiful 3D map visualization in R. This tutorial goal is to download tif satellite pictures and to show the Dolomite Alta Via 1 trek 3D path with **rayshader* package.</description>
+    </item>
+    
+  </channel>
+</rss>

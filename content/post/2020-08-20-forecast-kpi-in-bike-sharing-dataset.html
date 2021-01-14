@@ -1,0 +1,86 @@
+---
+title: "Statistical Learning and KPI"
+author: Omer Perach
+date: '2020-08-20'
+slug: forecast-kpi-in-bike-sharing-dataset
+categories: []
+tags:
+  - Data Science
+  - Study
+  - Learning
+description: ''
+topics: []
+---
+
+
+
+<div id="going-back-to-a-time-series-bike-sharing-dataset" class="section level3">
+<h3>Going back to a time series bike sharing dataset</h3>
+<p>During my MBA studies we received a final project in <em>Exploratory data analysis</em> course. The project was on a data set of a bike sharing. It is quite a famous data set that <strong>contains the hourly count of rental bikes between years 2011 and 2012 in Capital bikeshare system with the corresponding weather and seasonal information.</strong></p>
+<p>The course instructors want us to focus mainly on the exploratory data analysis of the data set and to try to infer important insight on each variable and their interaction with each other in order to make the best prediction model.
+The instructors arrange the data as follows, the first half of the month for the two consecutive years 2011 and 2012 given to us as the training set while they ask us to predict the next three days in each month (16,17,18).</p>
+</div>
+<div id="the-training-data-set" class="section level3">
+<h3>The training data set</h3>
+<pre class="r"><code>rm(list=ls())
+train&lt;-read.csv(&quot;bike_train.csv&quot;)</code></pre>
+</div>
+<div id="lets-define-the-datetime-variable-to-time-format" class="section level3">
+<h3>Let’s define the datetime variable to time format</h3>
+<pre class="r"><code>library(lubridate)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     date, intersect, setdiff, union</code></pre>
+<pre class="r"><code>train$datetime&lt;-ymd_hms(train$datetime)
+train_test&lt;-sample(c(&quot;train&quot;,&quot;test&quot;),8600,replace = T,prob = c(0.8,0.2))
+train$train_test&lt;-train_test</code></pre>
+</div>
+<div id="lets-see-the-data-variable-by-variable" class="section level3">
+<h3>Let’s see the data variable by variable</h3>
+<p><img src="/post/2020-08-20-forecast-kpi-in-bike-sharing-dataset_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="/post/2020-08-20-forecast-kpi-in-bike-sharing-dataset_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre><code>##              datetime season holiday workingday weather temp  atemp humidity
+## 1 2011-01-01 00:00:00      1       0          0       1 9.84 14.395       81
+## 2 2011-01-01 01:00:00      1       0          0       1 9.02 13.635       80
+## 3 2011-01-01 02:00:00      1       0          0       1 9.02 13.635       80
+## 4 2011-01-01 03:00:00      1       0          0       1 9.84 14.395       75
+## 5 2011-01-01 04:00:00      1       0          0       1 9.84 14.395       75
+## 6 2011-01-01 05:00:00      1       0          0       2 9.84 12.880       75
+##   windspeed casual registered count train_test month year
+## 1    0.0000      3         13    16      train     1 2011
+## 2    0.0000      8         32    40      train     1 2011
+## 3    0.0000      5         27    32      train     1 2011
+## 4    0.0000      3         10    13      train     1 2011
+## 5    0.0000      0          1     1      train     1 2011
+## 6    6.0032      0          1     1      train     1 2011</code></pre>
+</div>
+<div id="focusing-on-kpi-rmse-mae-mape-bias-and-mse" class="section level3">
+<h3>Focusing on KPI: RMSE, MAE, MAPE, Bias and MSE</h3>
+<p>We will start now by creating functions for each KPI</p>
+<pre class="r"><code># Average error
+bias_av&lt;-function(actual,prediction){
+  bias&lt;-mean(prediction-actual)
+  return(bias)
+}
+#Mean absolute percentage error
+mape&lt;-function(actual,prediction){
+  mape&lt;-mean(abs((prediction-actual)/actual))*100
+  return(mape)
+}
+# Mean absolute error
+eme&lt;-function(actual,prediction){
+  mae&lt;-mean(abs(prediction-actual))
+  return(mae)
+}
+# Root mean squared error
+aremse&lt;-function(actual,prediction){
+  rmse&lt;-sqrt(mean((prediction-actual)^2))
+  return(rmse)
+}
+# Mean squared error
+emese&lt;-function(actual,prediction){
+  mse&lt;-mean((prediction-actual)^2)
+  return((mse))
+}</code></pre>
+</div>
