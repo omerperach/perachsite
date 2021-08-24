@@ -32,15 +32,17 @@ WOFOST is a huge and amazing project and I am on the very early stage of learnin
 ## What parameters the package functions need to recieve?
 
 The mandatory variables for the functions are:
+
 * crop - which crop I want to model. from a list.
-* whether - weather data set with the following parameters:
-  - date-"Date" class variable in R.
-  - srad-Solar radiation kJ m^-2 day^-1.
-  - tmin-minimum temperature per day (degrees C).
-  - tmax-maximum temperature per day (degrees C).
-  - vapr-vapor pressure. 
-  - wind-wind speed.
-  - prec-precipitation.
+* whether - weather data set with the following parameters:  
+
+  + date-"Date" class variable in R.
+  + srad-Solar radiation kJ m^-2 day^-1.
+  + tmin-minimum temperature per day (degrees C).
+  + tmax-maximum temperature per day (degrees C).
+  + vapr-vapor pressure. 
+  + wind-wind speed.
+  + prec-precipitation.
   
   
 
