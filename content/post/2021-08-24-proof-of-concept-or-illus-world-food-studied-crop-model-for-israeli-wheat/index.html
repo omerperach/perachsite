@@ -16,3 +16,34 @@ topics: []
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
+<div id="what-is-wofost" class="section level2">
+<h2>What is WOFOST?</h2>
+<p>WOFOST is a simulation model for the quantitative analysis of the growth and production of annual field crops <a href="https://www.wur.nl/en/show/A-gentle-introduction-to-WOFOST.htm">Please read</a>. WOFOST could basically help us to understand the dynamic of the plant biological features such as <strong>Leaf area index</strong>, <strong>Biomass</strong>, <strong>Water use</strong>, <strong>Yield</strong> etc. for a location given knowledge about soil, crop, weather and crop management.</p>
+</div>
+<div id="application-of-wofost" class="section level2">
+<h2>Application of WOFOST</h2>
+<ul>
+<li>yield risk and inter- annual yield variability.</li>
+<li>yield variability over soil types, or over a range of agro-hydrological conditions.</li>
+<li>fifferences among cultivars.</li>
+<li>relative importance of growth determining factors.</li>
+<li>Many more</li>
+</ul>
+</div>
+<div id="my-plan" class="section level2">
+<h2>My plan</h2>
+<p>WOFOST is a huge and amazing project and I am on the very early stage of learning it. Nonetheless, I believe in learning from doing so I decided to try and take a new R package <em>Rwofost</em> and use it. This R package trying to implement the WOFOST model in the R environment. It is worth mentioning that their is a python shell that are more suitable to work with that model <a href="https://pcse.readthedocs.io/en/stable/">Please read</a>.</p>
+</div>
+<div id="what-parameters-the-package-functions-need-to-recieve" class="section level2">
+<h2>What parameters the package functions need to recieve?</h2>
+<p>The mandatory variables for the functions are:
+* crop - which crop I want to model. from a list.
+* whether - weather data set with the following parameters:
+- date-“Date” class variable in R.
+- srad-Solar radiation kJ m^-2 day^-1.
+- tmin-minimum temperature per day (degrees C).
+- tmax-maximum temperature per day (degrees C).
+- vapr-vapor pressure.
+- wind-wind speed.
+- prec-precipitation.</p>
+</div>
