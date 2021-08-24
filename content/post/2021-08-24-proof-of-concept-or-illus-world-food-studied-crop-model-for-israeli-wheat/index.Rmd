@@ -40,9 +40,17 @@ The mandatory variables for the functions are:
   + srad-Solar radiation kJ m^-2 day^-1.
   + tmin-minimum temperature per day (degrees C).
   + tmax-maximum temperature per day (degrees C).
-  + vapr-vapor pressure. 
-  + wind-wind speed.
-  + prec-precipitation.
+  + vapr-vapor pressure (kPa). 
+  + wind-wind speed (m s^-1).
+  + prec-precipitation (mm day^-1).
+
+## First stage - single station
+
+In the first stage I will only collect data for a single station. I decided to focus in a data from a station called *Newe Ya'ar*. The station located near a small vilage called *Ramat Yishai*. The reason I am choosing to work on this station:
+
+* The soil type in that reason is clay.
+* The area is good representative of a place with annual field crops.
+
   
   
 
