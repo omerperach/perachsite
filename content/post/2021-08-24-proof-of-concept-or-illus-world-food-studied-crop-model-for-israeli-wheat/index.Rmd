@@ -117,8 +117,7 @@ d<-wofost(crop,df_for_model,soil,contr)
 head(d)
 ```
 ```{r echo=TRUE}
-p<-d%>%ggplot(aes(x=date,y=WSO))+geom_point()+xlab("Date")+ylab("Grain dry weight Kg/Ha")
-print(p)
+plot(d$date,d$WSO,xlab = "Date",ylab = "Grain weight (kg/Ha)")
 ```
 
 
