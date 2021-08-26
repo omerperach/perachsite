@@ -48,6 +48,7 @@ The mandatory variables for the functions are:
 
 In the first stage I will only collect data for a single station. I decided to focus in a data from a station called *Gilat*. The station located near a small toen called *Ofakim*. The reasons I am choosing to work on this station are:
 
+* I am working on chickpea in my PhD
 * The soil type in that reason is clay.
 * The area is good representative of a place with annual field crops.
 * I have a knowledge on chickpea development grown over there on 2021 season.
