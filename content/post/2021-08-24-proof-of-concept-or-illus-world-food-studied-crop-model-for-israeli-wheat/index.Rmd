@@ -19,10 +19,10 @@ WOFOST is a simulation model for the quantitative analysis of the growth and pro
 
 ## Application of WOFOST
 
-* yield risk and inter- annual yield variability.
-* yield variability over soil types, or over a range of agro-hydrological conditions.
-* fifferences among cultivars.
-* relative importance of growth determining factors.
+* Yield risk and inter- annual yield variability.
+* Yield variability over soil types, or over a range of agro-hydrological conditions.
+* Differences among cultivars.
+* Relative importance of growth determining factors.
 * Many more
 
 ## My plan
@@ -46,7 +46,7 @@ The mandatory variables for the functions are:
 
 ## First stage - single station
 
-In the first stage I will only collect data for a single station. I decided to focus in a data from a station called *Gilat*. The station located near a small toen called *Ofakim*. The reasons I am choosing to work on this station are:
+In the first stage I will only collect data for a single station. I decided to focus in a data from a station called *Newe Ya'ar*. The station located near a small village called *Ramat Yishai*. The reasons I am choosing to work on this station are:
 
 * I am working on chickpea in my PhD
 * The soil type in that reason is clay.
@@ -59,6 +59,25 @@ In the first stage I will only collect data for a single station. I decided to f
 df<-read.csv("weather_data.csv")
 head(df)
 ```
+
+## Data preperation
+
+The only state variable which we don't have is vapor pressure (hPa). This can be achieved by using maximum and minimum temperature with relative maximum and minimum humidity [please see equation](http://www.fao.org/3/x0490e/x0490e07.htm). WOFOST unit for all variables:  
+* TMAX (Celsius)
+* TMIN (Celsius)
+* VAP (Vapor Pressure) (hPa)
+* WIND (Wind speed) (meter/second)
+* RAIN (cm/day)
+* IRRAD (Joule/m^2*day)
+
+```{r}
+df$e0min<-0.6108*exp((17.27*df$Tmin)/(df$Tmin+237.3))
+df$e0max<-0.6108*exp((17.27*df$Tmax)/(df$Tmax+237.3))
+df$VAP<-df$e0min*(df$)
+```
+
+
+
 
 
   
