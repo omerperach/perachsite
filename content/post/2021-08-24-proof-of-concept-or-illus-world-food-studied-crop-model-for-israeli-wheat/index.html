@@ -2,6 +2,7 @@
 title: "Proof of concept or illusions? WOrld FOod STudies crop model for Israeli Chickpea"
 author: "Omer Perach"
 date: '2021-08-24'
+output: html_document
 slug: []
 categories:
 - Crop Model
@@ -139,8 +140,9 @@ head(d)</code></pre>
 ## 4 0.001811663 0.02254804   0 0.11
 ## 5 0.002242620 0.02619071   0 0.11
 ## 6 0.002675244 0.03362025   0 0.11</code></pre>
-<pre class="r"><code>d%&gt;%ggplot(aes(x=date,y=WSO))+geom_point()+xlab(&quot;Date&quot;)+ylab(&quot;Grain dry weight Kg/Ha&quot;)</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/Model%20running-1.png" width="672" />
-Working, did not check it yet against observed data but the overall message is <strong>we can use WOFOST to model Israeli chickpea</strong>.</p>
+<pre class="r"><code>p&lt;-d%&gt;%ggplot(aes(x=date,y=WSO))+geom_point()+xlab(&quot;Date&quot;)+ylab(&quot;Grain dry weight Kg/Ha&quot;)
+print(p)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>Working, did not check it yet against observed data but the overall message is <strong>we can use WOFOST to model Israeli chickpea</strong>.</p>
 <p>To be continued…</p>
 </div>

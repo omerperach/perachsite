@@ -2,6 +2,7 @@
 title: "Proof of concept or illusions? WOrld FOod STudies crop model for Israeli Chickpea"
 author: "Omer Perach"
 date: '2021-08-24'
+output: html_document
 slug: []
 categories:
 - Crop Model
@@ -12,6 +13,10 @@ tags:
 description: ''
 topics: []
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ## What is WOFOST?
 
@@ -93,7 +98,7 @@ This is it, we only need the following 7 variables for the model:
 
 Let's keep only these variables in a new data set
 
-```{r Model running}
+```{r Model running, echo=TRUE}
 library(Rwofost)
 df_for_model<-df[c("date_time","TMAX","TMIN","VAP","RAIN","WIND","IRRAD")]
 ##Choosing crop from wofost library
@@ -110,8 +115,13 @@ colnames(df_for_model)
 colnames(df_for_model)<-c("date","tmax","tmin","vapr","prec","wind","srad")
 d<-wofost(crop,df_for_model,soil,contr)
 head(d)
-d%>%ggplot(aes(x=date,y=WSO))+geom_point()+xlab("Date")+ylab("Grain dry weight Kg/Ha")
 ```
+```{r echo=TRUE}
+p<-d%>%ggplot(aes(x=date,y=WSO))+geom_point()+xlab("Date")+ylab("Grain dry weight Kg/Ha")
+print(p)
+```
+
+
 Working, did not check it yet against observed data but the overall message is **we can use WOFOST to model Israeli chickpea**.
 
 To be continued...
