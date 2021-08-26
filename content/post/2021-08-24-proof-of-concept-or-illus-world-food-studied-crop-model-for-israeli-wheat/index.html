@@ -23,10 +23,10 @@ topics: []
 <div id="application-of-wofost" class="section level2">
 <h2>Application of WOFOST</h2>
 <ul>
-<li>yield risk and inter- annual yield variability.</li>
-<li>yield variability over soil types, or over a range of agro-hydrological conditions.</li>
-<li>fifferences among cultivars.</li>
-<li>relative importance of growth determining factors.</li>
+<li>Yield risk and inter- annual yield variability.</li>
+<li>Yield variability over soil types, or over a range of agro-hydrological conditions.</li>
+<li>Differences among cultivars.</li>
+<li>Relative importance of growth determining factors.</li>
 <li>Many more</li>
 </ul>
 </div>
@@ -53,7 +53,7 @@ topics: []
 </div>
 <div id="first-stage---single-station" class="section level2">
 <h2>First stage - single station</h2>
-<p>In the first stage I will only collect data for a single station. I decided to focus in a data from a station called <em>Gilat</em>. The station located near a small toen called <em>Ofakim</em>. The reasons I am choosing to work on this station are:</p>
+<p>In the first stage I will only collect data for a single station. I decided to focus in a data from a station called <em>Newe Ya’ar</em>. The station located near a small village called <em>Ramat Yishai</em>. The reasons I am choosing to work on this station are:</p>
 <ul>
 <li>I am working on chickpea in my PhD</li>
 <li>The soil type in that reason is clay.</li>
@@ -65,11 +65,82 @@ topics: []
 <h2>The data from the station</h2>
 <pre class="r"><code>df&lt;-read.csv(&quot;weather_data.csv&quot;)
 head(df)</code></pre>
-<pre><code>##          Date_time Tmax Rhmax Tmin Rhmin Rain Irradiance Wind.speed
-## 1 24:00 13/01/2021 25.8    82 16.9    22    0        6.2        4.5
-## 2 24:00 14/01/2021 19.6   100 11.8    33    8       13.4        5.0
-## 3 24:00 15/01/2021 18.3    95  9.4    50    0        8.6        2.6
-## 4 24:00 16/01/2021 18.7    89  8.1    31    0       10.8        2.9
-## 5 24:00 17/01/2021 18.3    60 10.6    30    0        9.1        5.4
-## 6 24:00 18/01/2021 17.5    80  9.3    44    0        7.5        3.7</code></pre>
+<pre><code>##          date_time TMAX RHMAX TMIN RHMIN RAIN IRRAD WIND
+## 1 24:00 12/01/2021 25.3    75  8.3    30  0.0  12.3  2.5
+## 2 24:00 13/01/2021 21.4    89 10.5    37  0.4   5.6  1.8
+## 3 24:00 14/01/2021 17.0    93 10.7    70 24.0   2.6  2.8
+## 4 24:00 15/01/2021 18.1    95  7.4    65  0.2   9.5  1.8
+## 5 24:00 16/01/2021 17.6    96  7.0    50  8.1  10.1  2.4
+## 6 24:00 17/01/2021 18.1    95  8.7    54 28.7   5.7  4.6</code></pre>
+</div>
+<div id="data-preperation" class="section level2">
+<h2>Data preperation</h2>
+<p>The only state variable which we don’t have is vapor pressure (hPa). This can be achieved by using maximum and minimum temperature with relative maximum and minimum humidity <a href="http://www.fao.org/3/x0490e/x0490e07.htm">please see equation</a>. WOFOST unit for all variables:<br />
+* TMAX (Celsius)
+* TMIN (Celsius)
+* VAP (Vapor Pressure) (Kpa)
+* WIND (Wind speed) (meter/second)
+* RAIN (cm/day)
+* IRRAD (Kjoule/m^2*day)</p>
+<pre class="r"><code>df$e0min&lt;-0.6108*exp((17.27*df$TMIN)/(df$TMIN+237.3))
+df$e0max&lt;-0.6108*exp((17.27*df$TMAX)/(df$TMAX+237.3))
+df$VAP&lt;-((df$e0min*(df$RHMIN/100))+(df$e0max*(df$RHMAX/100)))/2
+df$IRRAD&lt;-df$IRRAD*1000
+#Handling the date type
+library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.4     v dplyr   1.0.7
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   2.0.1     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>df$date_time&lt;-str_remove(df$date_time,&quot; &quot;)
+df$date_time&lt;-str_remove(df$date_time,&quot;24:00&quot;)
+df$date_time&lt;-as.Date(df$date_time,format=&quot;%d/%m/%Y&quot;)</code></pre>
+<p>This is it, we only need the following 7 variables for the model:<br />
+* TMAX
+* TMIN
+* VAP
+* WIND
+* RAIN
+* IRRAD</p>
+<p>Let’s keep only these variables in a new data set</p>
+<pre class="r"><code>library(Rwofost)
+df_for_model&lt;-df[c(&quot;date_time&quot;,&quot;TMAX&quot;,&quot;TMIN&quot;,&quot;VAP&quot;,&quot;RAIN&quot;,&quot;WIND&quot;,&quot;IRRAD&quot;)]
+##Choosing crop from wofost library
+crop&lt;-wofost_crop(&quot;chickpea&quot;)
+##Choosing soil, arbitary (very important but not my area of expertise)
+soil&lt;-wofost_soil(&quot;ec1&quot;)
+#Control parameters
+contr&lt;-wofost_control()
+contr$modelstart&lt;-as.Date(&quot;2021-01-12&quot;)
+contr$latitude&lt;-32.70
+contr$elevation&lt;-35
+#run model
+colnames(df_for_model)</code></pre>
+<pre><code>## [1] &quot;date_time&quot; &quot;TMAX&quot;      &quot;TMIN&quot;      &quot;VAP&quot;       &quot;RAIN&quot;      &quot;WIND&quot;     
+## [7] &quot;IRRAD&quot;</code></pre>
+<pre class="r"><code>colnames(df_for_model)&lt;-c(&quot;date&quot;,&quot;tmax&quot;,&quot;tmin&quot;,&quot;vapr&quot;,&quot;prec&quot;,&quot;wind&quot;,&quot;srad&quot;)
+d&lt;-wofost(crop,df_for_model,soil,contr)
+head(d)</code></pre>
+<pre><code>##         date step  TSUM        DVS        LAI      WRT      WLV      WST WSO
+## 1 2021-01-12    1  0.00 0.00000000 0.02880000 16.00000 14.40000  9.60000   0
+## 2 2021-01-13    2  9.80 0.01418234 0.03105374 17.25208 15.52687 10.35125   0
+## 3 2021-01-14    3 18.75 0.02713459 0.03206304 17.78750 16.03152 10.68768   0
+## 4 2021-01-15    4 25.60 0.03704776 0.03250123 18.01025 16.25062 10.83374   0
+## 5 2021-01-16    5 31.35 0.04536903 0.03459956 19.04244 17.29978 11.53319   0
+## 6 2021-01-17    6 36.65 0.05303907 0.03699423 20.18808 18.49712 12.33141   0
+##           TRA        EVS EVW   SM
+## 1 0.000100000 0.05215664   0 0.11
+## 2 0.002221956 0.03008788   0 0.11
+## 3 0.001626952 0.02027390   0 0.11
+## 4 0.001811663 0.02254804   0 0.11
+## 5 0.002242620 0.02619071   0 0.11
+## 6 0.002675244 0.03362025   0 0.11</code></pre>
+<pre class="r"><code>d%&gt;%ggplot(aes(x=date,y=WSO))+geom_point()+xlab(&quot;Date&quot;)+ylab(&quot;Grain dry weight Kg/Ha&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/Model%20running-1.png" width="672" />
+Working, did not check it yet against observed data but the overall message is <strong>we can use WOFOST to model Israeli chickpea</strong>.</p>
+<p>To be continued…</p>
 </div>

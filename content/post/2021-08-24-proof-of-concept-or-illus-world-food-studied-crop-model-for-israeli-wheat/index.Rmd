@@ -55,7 +55,7 @@ In the first stage I will only collect data for a single station. I decided to f
 
 ## The data from the station
 
-```{r}
+```{r Reading the data set}
 df<-read.csv("weather_data.csv")
 head(df)
 ```
@@ -65,18 +65,56 @@ head(df)
 The only state variable which we don't have is vapor pressure (hPa). This can be achieved by using maximum and minimum temperature with relative maximum and minimum humidity [please see equation](http://www.fao.org/3/x0490e/x0490e07.htm). WOFOST unit for all variables:  
 * TMAX (Celsius)
 * TMIN (Celsius)
-* VAP (Vapor Pressure) (hPa)
+* VAP (Vapor Pressure) (Kpa)
 * WIND (Wind speed) (meter/second)
 * RAIN (cm/day)
-* IRRAD (Joule/m^2*day)
+* IRRAD (Kjoule/m^2*day)
 
-```{r}
-df$e0min<-0.6108*exp((17.27*df$Tmin)/(df$Tmin+237.3))
-df$e0max<-0.6108*exp((17.27*df$Tmax)/(df$Tmax+237.3))
-df$VAP<-df$e0min*(df$)
+```{r Computing missing state variables}
+df$e0min<-0.6108*exp((17.27*df$TMIN)/(df$TMIN+237.3))
+df$e0max<-0.6108*exp((17.27*df$TMAX)/(df$TMAX+237.3))
+df$VAP<-((df$e0min*(df$RHMIN/100))+(df$e0max*(df$RHMAX/100)))/2
+df$IRRAD<-df$IRRAD*1000
+#Handling the date type
+library(tidyverse)
+df$date_time<-str_remove(df$date_time," ")
+df$date_time<-str_remove(df$date_time,"24:00")
+df$date_time<-as.Date(df$date_time,format="%d/%m/%Y")
+
 ```
 
+This is it, we only need the following 7 variables for the model:  
+* TMAX
+* TMIN
+* VAP
+* WIND
+* RAIN
+* IRRAD
 
+Let's keep only these variables in a new data set
+
+```{r Model running}
+library(Rwofost)
+df_for_model<-df[c("date_time","TMAX","TMIN","VAP","RAIN","WIND","IRRAD")]
+##Choosing crop from wofost library
+crop<-wofost_crop("chickpea")
+##Choosing soil, arbitary (very important but not my area of expertise)
+soil<-wofost_soil("ec1")
+#Control parameters
+contr<-wofost_control()
+contr$modelstart<-as.Date("2021-01-12")
+contr$latitude<-32.70
+contr$elevation<-35
+#run model
+colnames(df_for_model)
+colnames(df_for_model)<-c("date","tmax","tmin","vapr","prec","wind","srad")
+d<-wofost(crop,df_for_model,soil,contr)
+head(d)
+d%>%ggplot(aes(x=date,y=WSO))+geom_point()+xlab("Date")+ylab("Grain dry weight Kg/Ha")
+```
+Working, did not check it yet against observed data but the overall message is **we can use WOFOST to model Israeli chickpea**.
+
+To be continued...
 
 
 
