@@ -1,5 +1,5 @@
 ---
-title: "Proof of concept or illusions? WOrld FOod STudied crop model for Israeli Chickpea"
+title: "Proof of concept or illusions? WOrld FOod STudies crop model for Israeli Chickpea"
 author: "Omer Perach"
 date: '2021-08-24'
 slug: []
@@ -51,7 +51,7 @@ In the first stage I will only collect data for a single station. I decided to f
 * I am working on chickpea in my PhD
 * The soil type in that reason is clay.
 * The area is good representative of a place with annual field crops.
-* I have a knowledge on chickpea development grown over there on 2021 season.
+* I have a knowledge on chickpea grown at Gilat  from 2021 season.
 
 ## The data from the station
 
