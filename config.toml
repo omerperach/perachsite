@@ -57,3 +57,8 @@ ignoreFiles=["\\.Rmd$","\\.Rmarkdown$","_files$","_cache$"]
   github = "omerperach"
   stackoverflow = "*"
   linkedin = "Omer Perach"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
