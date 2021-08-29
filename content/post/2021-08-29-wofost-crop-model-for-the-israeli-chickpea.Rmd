@@ -1,9 +1,16 @@
 ---
-title: "WOFOST crop model for Israeli Chickpea"
+title: "WOfost Crop model for the Israeli Chickpea"
 author: "Omer Perach"
-date: "8/29/2021"
-output: html_document
+date: '2021-08-29'
+slug: []
+categories:
+- Crop Model
+- Agriculture
+tags: []
+description: ''
+topics: []
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -115,9 +122,3 @@ plot(d$date,d$WSO,xlab = "Date",ylab = "Grain weight (kg/Ha)")
 Working, did not check it yet against observed data but the overall message is **we can use WOFOST to model Israeli chickpea**.
 
 To be continued...
-
-
-
-  
-  
-
