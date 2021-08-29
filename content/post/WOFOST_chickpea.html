@@ -1,0 +1,138 @@
+---
+title: "WOFOST crop model for Israeli Chickpea"
+author: "Omer Perach"
+date: "8/29/2021"
+output: html_document
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="what-is-wofost" class="section level2">
+<h2>What is WOFOST?</h2>
+<p>WOFOST is a simulation model for the quantitative analysis of the growth and production of annual field crops <a href="https://www.wur.nl/en/show/A-gentle-introduction-to-WOFOST.htm">Please read</a>. WOFOST could basically help us to understand the dynamic of the plant biological features such as <strong>Leaf area index</strong>, <strong>Biomass</strong>, <strong>Water use</strong>, <strong>Yield</strong> etc. for a location given knowledge about soil, crop, weather and crop management.</p>
+</div>
+<div id="application-of-wofost" class="section level2">
+<h2>Application of WOFOST</h2>
+<ul>
+<li>Yield risk and inter- annual yield variability.</li>
+<li>Yield variability over soil types, or over a range of agro-hydrological conditions.</li>
+<li>Differences among cultivars.</li>
+<li>Relative importance of growth determining factors.</li>
+<li>Many more</li>
+</ul>
+</div>
+<div id="my-plan" class="section level2">
+<h2>My plan</h2>
+<p>WOFOST is a huge and amazing project and I am on the very early stage of learning it. Nonetheless, I believe in learning from doing so I decided to try and take a new R package <em>Rwofost</em> and use it. This R package trying to implement the WOFOST model in the R environment. It is worth mentioning that their is a python shell that are more suitable to work with that model <a href="https://pcse.readthedocs.io/en/stable/">Please read</a>.</p>
+</div>
+<div id="what-parameters-the-package-functions-need-to-recieve" class="section level2">
+<h2>What parameters the package functions need to recieve?</h2>
+<p>The mandatory variables for the functions are:</p>
+<ul>
+<li><p>crop - which crop I want to model. from a list.</p></li>
+<li><p>whether - weather data set with the following parameters:</p>
+<ul>
+<li>date-“Date” class variable in R.</li>
+<li>srad-Solar radiation kJ m^-2 day^-1.</li>
+<li>tmin-minimum temperature per day (degrees C).</li>
+<li>tmax-maximum temperature per day (degrees C).</li>
+<li>vapr-vapor pressure (kPa).</li>
+<li>wind-wind speed (m s^-1).</li>
+<li>prec-precipitation (mm day^-1).</li>
+</ul></li>
+</ul>
+</div>
+<div id="first-stage---single-station" class="section level2">
+<h2>First stage - single station</h2>
+<p>In the first stage I will only collect data for a single station. I decided to focus in a data from a station called <em>Newe Ya’ar</em>. The station located near a small village called <em>Ramat Yishai</em>. The reasons I am choosing to work on this station are:</p>
+<ul>
+<li>I am working on chickpea in my PhD</li>
+<li>The soil type in that reason is clay.</li>
+<li>The area is good representative of a place with annual field crops.</li>
+<li>I have a knowledge on chickpea grown at Gilat from 2021 season.</li>
+</ul>
+</div>
+<div id="the-data-from-the-station" class="section level2">
+<h2>The data from the station</h2>
+<pre class="r"><code>df&lt;-read.csv(&quot;weather_data.csv&quot;)
+head(df)</code></pre>
+<pre><code>##          date_time TMAX RHMAX TMIN RHMIN RAIN IRRAD WIND
+## 1 24:00 12/01/2021 25.3    75  8.3    30  0.0  12.3  2.5
+## 2 24:00 13/01/2021 21.4    89 10.5    37  0.4   5.6  1.8
+## 3 24:00 14/01/2021 17.0    93 10.7    70 24.0   2.6  2.8
+## 4 24:00 15/01/2021 18.1    95  7.4    65  0.2   9.5  1.8
+## 5 24:00 16/01/2021 17.6    96  7.0    50  8.1  10.1  2.4
+## 6 24:00 17/01/2021 18.1    95  8.7    54 28.7   5.7  4.6</code></pre>
+</div>
+<div id="data-preperation" class="section level2">
+<h2>Data preperation</h2>
+<p>The only state variable which we don’t have is vapor pressure (hPa). This can be achieved by using maximum and minimum temperature with relative maximum and minimum humidity <a href="http://www.fao.org/3/x0490e/x0490e07.htm">please see equation</a>. WOFOST unit for all variables:<br />
+* TMAX (Celsius)
+* TMIN (Celsius)
+* VAP (Vapor Pressure) (Kpa)
+* WIND (Wind speed) (meter/second)
+* RAIN (cm/day)
+* IRRAD (Kjoule/m^2*day)</p>
+<pre class="r"><code>df$e0min&lt;-0.6108*exp((17.27*df$TMIN)/(df$TMIN+237.3))
+df$e0max&lt;-0.6108*exp((17.27*df$TMAX)/(df$TMAX+237.3))
+df$VAP&lt;-((df$e0min*(df$RHMIN/100))+(df$e0max*(df$RHMAX/100)))/2
+df$IRRAD&lt;-df$IRRAD*1000
+#Handling the date type
+library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.4     v dplyr   1.0.7
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   2.0.1     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>df$date_time&lt;-str_remove(df$date_time,&quot; &quot;)
+df$date_time&lt;-str_remove(df$date_time,&quot;24:00&quot;)
+df$date_time&lt;-as.Date(df$date_time,format=&quot;%d/%m/%Y&quot;)</code></pre>
+<p>This is it, we only need the following 7 variables for the model:<br />
+* TMAX
+* TMIN
+* VAP
+* WIND
+* RAIN
+* IRRAD</p>
+<p>Let’s keep only these variables in a new data set</p>
+<pre class="r"><code>library(Rwofost)
+df_for_model&lt;-df[c(&quot;date_time&quot;,&quot;TMAX&quot;,&quot;TMIN&quot;,&quot;VAP&quot;,&quot;RAIN&quot;,&quot;WIND&quot;,&quot;IRRAD&quot;)]
+##Choosing crop from wofost library
+crop&lt;-wofost_crop(&quot;chickpea&quot;)
+##Choosing soil, arbitary (very important but not my area of expertise)
+soil&lt;-wofost_soil(&quot;ec1&quot;)
+#Control parameters
+contr&lt;-wofost_control()
+contr$modelstart&lt;-as.Date(&quot;2021-01-12&quot;)
+contr$latitude&lt;-32.70
+contr$elevation&lt;-35
+#run model
+colnames(df_for_model)</code></pre>
+<pre><code>## [1] &quot;date_time&quot; &quot;TMAX&quot;      &quot;TMIN&quot;      &quot;VAP&quot;       &quot;RAIN&quot;      &quot;WIND&quot;     
+## [7] &quot;IRRAD&quot;</code></pre>
+<pre class="r"><code>colnames(df_for_model)&lt;-c(&quot;date&quot;,&quot;tmax&quot;,&quot;tmin&quot;,&quot;vapr&quot;,&quot;prec&quot;,&quot;wind&quot;,&quot;srad&quot;)
+d&lt;-wofost(crop,df_for_model,soil,contr)
+head(d)</code></pre>
+<pre><code>##         date step  TSUM        DVS        LAI      WRT      WLV      WST WSO
+## 1 2021-01-12    1  0.00 0.00000000 0.02880000 16.00000 14.40000  9.60000   0
+## 2 2021-01-13    2  9.80 0.01418234 0.03105374 17.25208 15.52687 10.35125   0
+## 3 2021-01-14    3 18.75 0.02713459 0.03206304 17.78750 16.03152 10.68768   0
+## 4 2021-01-15    4 25.60 0.03704776 0.03250123 18.01025 16.25062 10.83374   0
+## 5 2021-01-16    5 31.35 0.04536903 0.03459956 19.04244 17.29978 11.53319   0
+## 6 2021-01-17    6 36.65 0.05303907 0.03699423 20.18808 18.49712 12.33141   0
+##           TRA        EVS EVW   SM
+## 1 0.000100000 0.05215664   0 0.11
+## 2 0.002221956 0.03008788   0 0.11
+## 3 0.001626952 0.02027390   0 0.11
+## 4 0.001811663 0.02254804   0 0.11
+## 5 0.002242620 0.02619071   0 0.11
+## 6 0.002675244 0.03362025   0 0.11</code></pre>
+<pre class="r"><code>plot(d$date,d$WSO,xlab = &quot;Date&quot;,ylab = &quot;Grain weight (kg/Ha)&quot;)</code></pre>
+<p><img src="/post/WOFOST_chickpea_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>Working, did not check it yet against observed data but the overall message is <strong>we can use WOFOST to model Israeli chickpea</strong>.</p>
+<p>To be continued…</p>
+</div>

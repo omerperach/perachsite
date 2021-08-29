@@ -1,17 +1,8 @@
 ---
-title: "Proof of concept or illusions? WOrld FOod STudies crop model for Israeli Chickpea"
+title: "WOFOST crop model for Israeli Chickpea"
 author: "Omer Perach"
-date: '2021-08-24'
+date: "8/29/2021"
 output: html_document
-slug: []
-categories:
-- Crop Model
-- Spatial Analysis
-tags:
-- Agriculture
-- Modeling
-description: ''
-topics: []
 ---
 
 ```{r setup, include=FALSE}
