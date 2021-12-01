@@ -13,11 +13,11 @@ topics: []
 ---
 
 # The incentive 
-If you do not know it, there are satellites in the sky:)\
-I am joking, most of us are aware about it, but I don't think that most of us are aware that satellites traveling in the sky and taking pictures that we could download and process.\
-**This post is to teach you how to download data from a satellite called Sentinel and to process it**
+If you are working as a farmer and you know that you can monitor your fields for free. Would you not do it?
+**This post is to teach you how to download data from a satellite called Sentinel and to process it for free, not paying anyone to do it for you or you doing it but with the aid of a very expansive software**
 
 # How to dowanload the images
+
 There are bunch of R packages that can help you to download images from many free satellites such as:  
 
 1. RGIStools
