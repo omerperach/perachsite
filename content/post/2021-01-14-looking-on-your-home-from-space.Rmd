@@ -13,6 +13,7 @@ topics: []
 ---
 
 # The incentive 
+
 If you are working as a farmer and you know that you can monitor your fields for free. Would you not do it?
 **This post is to teach you how to download data from a satellite called Sentinel and to process it for free, not paying anyone to do it for you or you doing it but with the aid of a very expansive software**
 
