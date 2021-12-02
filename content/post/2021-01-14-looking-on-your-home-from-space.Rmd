@@ -71,5 +71,11 @@ ndvi_21<-(pic_21_raster[[5]]-pic_21_raster[[4]])/(pic_21_raster[[5]]+pic_21_rast
 mapview::mapview(ndvi_21)
 ```
 
+Now, it is not very common to see NDVI as above, it is more convenient to use other palette,most of the times between red and green.
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(RColorBrewer)
+ndvi_palette<-brewer.pal(9,"RdYlGn")
+mapview::mapview(ndvi_21,col.region=ndvi_palette)
+```
 
 
