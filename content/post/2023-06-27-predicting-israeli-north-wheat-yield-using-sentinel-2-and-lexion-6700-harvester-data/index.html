@@ -1,0 +1,141 @@
+---
+title: Predicting israeli north wheat yield using Sentinel-2 and Lexion 6700 harvester
+  data
+author: Omer Perach
+date: '2023-06-27'
+slug: []
+categories: []
+tags: []
+description: ''
+topics: []
+---
+
+
+
+<p>In this post, we will delve into the analysis of wheat yield data obtained from two Class Lexion 6700 harvester combines during the 2022 growing season. We will show the general workflow on how to build spectral and combine harvester yield data.</p>
+<p>The steps we are going to take.</p>
+<ul>
+<li><p>Class Lexion 6700 harvester data examination and cleaning.</p></li>
+<li><p>Transforming into spatial data frame and examination.</p></li>
+<li><p>Sentinel-2 spectral Data and matching spectral variables to the combine harvester yield data.</p></li>
+<li><p>Building a random forest model to predict yield.</p></li>
+</ul>
+<div id="class-lexion-6700-harvester-data-examination-and-cleaning." class="section level2">
+<h2>Class Lexion 6700 harvester data examination and cleaning.</h2>
+<pre class="r"><code>class_df&lt;-read.csv(&quot;class_combine_data_2022.csv&quot;) #reading the data set
+names(class_df) ##variable names</code></pre>
+<pre><code>##  [1] &quot;Date.Time&quot;                          &quot;Serial.number&quot;                     
+##  [3] &quot;GPS.longitude....&quot;                  &quot;GPS.latitude....&quot;                  
+##  [5] &quot;Total.working.hours.counter..h.&quot;    &quot;Ground.speed..km.h.&quot;               
+##  [7] &quot;Engine.speed..U.min.&quot;               &quot;Engine.load....&quot;                   
+##  [9] &quot;Drum.speed..U.min.&quot;                 &quot;Fan.speed..U.min.&quot;                 
+## [11] &quot;Rotor...straw.walker.speed..U.min.&quot; &quot;Separation.losses....&quot;             
+## [13] &quot;Sieve.losses....&quot;                   &quot;Chopper...&quot;                        
+## [15] &quot;Diesel.tank.level....&quot;              &quot;No..of.partial.widths...&quot;          
+## [17] &quot;Front.attachment.On.Off...&quot;         &quot;max..no..of.partial.widths...&quot;     
+## [19] &quot;Feed.rake.speed..U.min.&quot;            &quot;Working.position..I.O.&quot;            
+## [21] &quot;Grain.tank.unloading..I.O.&quot;         &quot;Main.drive.status..I.O.&quot;           
+## [23] &quot;Concave.position..mm.&quot;              &quot;Upper.sieve.position..mm.&quot;         
+## [25] &quot;Lower.sieve.position..mm.&quot;          &quot;Grain.tank.70..I.O.&quot;               
+## [27] &quot;Grain.tank.100..I.O.&quot;               &quot;Grain.moisture.content....&quot;        
+## [29] &quot;Throughput..t.h.&quot;                   &quot;Radial.spreader.speed..U.min.&quot;     
+## [31] &quot;Grain.in.returns....&quot;               &quot;Channel.position....&quot;              
+## [33] &quot;Yield.measurement..I.O.&quot;            &quot;Returns.auger.measurement....&quot;     
+## [35] &quot;Moisture.measurement...&quot;            &quot;Type.of.crop...&quot;                   
+## [37] &quot;Specific.crop.weight..g.l.&quot;         &quot;Auto.Pilot.status...&quot;              
+## [39] &quot;Cruise.Pilot.status...&quot;             &quot;Rate.of.work..ha.h.&quot;               
+## [41] &quot;Yield..t.ha.&quot;                       &quot;Quantimeter.calibration.factor...&quot; 
+## [43] &quot;Separation.sensitivity....&quot;         &quot;Sieve.sensitivity....&quot;</code></pre>
+<pre class="r"><code>nrow(class_df) #how many rows total</code></pre>
+<pre><code>## [1] 188079</code></pre>
+<p>To begin the data cleaning process for the harvester combine yield data, we will focus on a set of variables. Some of these variables are self-explanatory, while others are more technically related to the mechanical settings of the combine. Here are the minimum variables we will consider for the initial filtering:</p>
+<ul>
+<li>Type of crop: We will filter for “Wheat” only, indicating that the operator selected this crop.</li>
+<li>Front attachment status: We will apply a filter to keep only the rows where the front attachment is “On.”</li>
+<li>Quantimeter calibrated factor: This variable represents a correction factor between the measured yield and the actual yield. If the value is not equal to one, it suggests that the operator performed calibration on the yield measurement.</li>
+<li>Longitude and latitude: We will filter out rows that do not have valid longitude or latitude information.</li>
+<li>Yield (t/h): filter out rows without yield or rows with zero yield.</li>
+</ul>
+<p>After applying these initial filters, we can proceed with the data cleaning steps outlined below:</p>
+<ul>
+<li>Ground speed: We will clean out speed values (expressed in m/s) that are below or above two standard deviations from the mean speed.</li>
+<li>Yield: We will clean out yield values (expressed in t/h) that are below or above two standard deviations from the mean yield.</li>
+</ul>
+<p>By performing these steps, we aim to remove outliers and ensure that the data remains within a reasonable range for further analysis.</p>
+<pre class="r"><code>class_df_first_filter&lt;-class_df%&gt;%filter(Type.of.crop...==&quot;Wheat&quot;)%&gt;%
+  filter(Front.attachment.On.Off...==&quot;on&quot;)%&gt;%
+  filter(Quantimeter.calibration.factor...!=1)%&gt;%
+  filter(!is.na(GPS.longitude....)&amp;!is.na(GPS.latitude....))%&gt;%
+  filter(!is.na(Yield..t.ha.)&amp;Yield..t.ha.&gt;0)
+
+nrow(class_df_first_filter)###how many rows left following the first filter</code></pre>
+<pre><code>## [1] 50860</code></pre>
+<pre class="r"><code>##calculating the mean and sd of speed
+gs_mean&lt;-mean(class_df_first_filter$Ground.speed..km.h.) 
+gs_sd&lt;-sd(class_df_first_filter$Ground.speed..km.h.)
+yield_mean&lt;-mean(class_df_first_filter$Yield..t.ha.) 
+yield_sd&lt;-sd(class_df_first_filter$Yield..t.ha.)
+class_df_second_filter&lt;-class_df_first_filter%&gt;%filter(Ground.speed..km.h.&gt;gs_mean-2*gs_sd&amp;Ground.speed..km.h.&lt;gs_mean+2*gs_sd)%&gt;%
+  filter(Yield..t.ha.&gt;yield_mean-2*yield_sd&amp;Yield..t.ha.&lt;yield_mean+2*yield_sd)
+
+nrow(class_df_second_filter) #how many rows left follwing the second filter</code></pre>
+<pre><code>## [1] 46692</code></pre>
+</div>
+<div id="how-it-is-all-conected-to-precision-agriculture" class="section level2">
+<h2>How it is all conected to precision agriculture?</h2>
+<p>Early prediction of wheat yield, with minimal errors, during the months of January or February in Israel, has the potential to greatly benefit farmers in various aspects:</p>
+<ul>
+<li><p>Enhanced Operational Management: Accurate yield predictions early in the season can assist farmers in identifying less productive areas within their fields. This knowledge enables them to implement targeted interventions, optimize resource allocation, and take appropriate measures to improve productivity.</p></li>
+<li><p>Improved Financial Planning: Reliable yield forecasts enable farmers to estimate their potential revenue well in advance. This information empowers them to make informed decisions regarding investments, budgeting, and financial planning, ensuring greater stability and sustainability for their operations.</p></li>
+<li><p>Streamlined Supply Chain Management: With early knowledge of expected production amounts, farmers can align their supply chain operations more effectively. They can optimize logistics, storage, and distribution, ensuring that resources and infrastructure are appropriately allocated to handle the projected yield.</p></li>
+<li><p>Risk Mitigation through Insurance: Accurate early predictions of high-yielding areas allow farmers to assess potential risks and make informed decisions regarding insurance coverage. In the unfortunate event of a catastrophic incident impacting a supposed high-yield area, farmers will have a better understanding of the extent of their losses and can utilize insurance provisions accordingly.</p></li>
+</ul>
+<p>By leveraging early and precise yield predictions, farmers can make proactive decisions, optimize their agricultural practices, and plan ahead, leading to improved outcomes in operational management, financial planning, supply chain management, and risk mitigation through insurance.</p>
+</div>
+<div id="sentinel-2-spectral-data-and-matching-spectral-variables-to-the-combine-harvester-yield-data." class="section level2">
+<h2>Sentinel-2 spectral Data and matching spectral variables to the combine harvester yield data.</h2>
+<p>In a nutchel,Sentinel-2 multispectral instrument is a cutting-edge imaging sensor that captures high-resolution, multispectral imagery of the Earth’s surface, enabling detailed monitoring and analysis for various applications. Its data is essential for informed decision-making, resource management, and addressing global challenges through Earth observation.</p>
+<p>The Sentinel-2 MSI offers a spatial resolution ranging from 10 to 60 meters, allowing for the detection of fine-scale land cover changes. It has a short revisit time of 5 days at the equator, ensuring frequent and consistent data acquisition. The sensor captures data across 13 spectral bands, covering a wide range from visible to near-infrared and shortwave infrared, enabling detailed analysis of various land and coastal features, vegetation health, water quality, and urban areas.</p>
+<p>We will use 9 relevant bands in the spatial resolution of 20 meters.</p>
+<p>The following stages will be performed in the below code:
++ Reading the relevant Sentinel-2 tile and bands.
++ Showing the tile extension on the map.
++ Keeping only pixels with yield data on them.</p>
+<p>As you can see, some of the points placed in diffident different tiles but we will exclude them from the analysis.
+Our mission:
++ Extract the mean yield value for every pixel.
++ Every pixel have nine reflectance value for Jan 30 2022, 490nm, 550nm, 665nm 705nm, 740nm, 783nm 865nm 1610nm and 2100nm.</p>
+<p>There are numerous ways to match reflectance to spatial data, but we will perform the most simple one.</p>
+<pre class="r"><code>yield_data_set&lt;-read.csv(&quot;yield_data_set.csv&quot;)
+yield_data_set&lt;-as.tibble(yield_data_set)
+nrow(yield_data_set) ###number of roes in the data frame, multiple points seats inside pixel of 20 meter on 20 meter</code></pre>
+<pre><code>## [1] 21219</code></pre>
+<pre class="r"><code>nrow(yield_data_set)</code></pre>
+<pre><code>## [1] 21219</code></pre>
+<p>We finished with 21219 yield points as outcome variable and nine predictor variables. The range ov values for the yield looks reasonable since wheat yield can range from two to ten ton per hectare in israel.</p>
+</div>
+<div id="building-a-random-forest-model-to-predict-wheat-yield" class="section level2">
+<h2>Building a random forest model to predict wheat yield</h2>
+<pre class="r"><code>##divideing to train and test
+n &lt;- nrow(yield_data_set)
+set.seed(13)
+ntest &lt;- trunc(n / 3)
+testid &lt;- sample(1:n, ntest)
+x &lt;- scale(model.matrix(Yield ~ . - 1, data = yield_data_set))
+y &lt;- yield_data_set$Yield
+rf_mod&lt;-randomForest(x=x[-testid,],y=y[-testid],importance = T,mtry = 3)
+result_train&lt;-data.frame(Observed=yield_data_set$Yield[-testid],Predicted=rf_mod$predicted,Data=&quot;Train&quot;)
+result_test&lt;-data.frame(Observed=yield_data_set$Yield[testid],Predicted=predict(rf_mod,x[testid,]),Data=&quot;Test&quot;)
+rf_mod_yield_result&lt;-rbind(result_train,result_test)</code></pre>
+<pre class="r"><code>rf_mod_yield_result&lt;-read.csv(&quot;rf_mod_yield_result.csv&quot;)
+rf_mod_yield_result%&gt;%group_by(Data)%&gt;%summarise(RMSE=caret::RMSE(Predicted,Observed),R2=caret::R2(Predicted,Observed))</code></pre>
+<pre><code>## # A tibble: 2 × 3
+##   Data   RMSE    R2
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Test   1.35 0.521
+## 2 Train  1.37 0.515</code></pre>
+<p>The division of the dataset into 2/3 for training and 1/3 for testing, along with the application of a random forest model, yielded suboptimal results with a root mean square error of approximately 1.35 t/h and an R-squared value of 0.52. These results indicate a large error within a range of 1 to 10, which is not desirable.Nonetheless, zooming out, we used only one satellite imagery from January 30. Considerations for earlier and later dates need to be taken from a plant physiology and agri-technique point of view.</p>
+<p>Nevertheless, this workflow demonstrates the potential for wheat yield prediction. Achieving a lower error, around 0.5 t/h, would enable farmers to enhance efficiency and sustainability.</p>
+<p>Thank you for your attention.</p>
+<p>Omer Perach</p>
+</div>

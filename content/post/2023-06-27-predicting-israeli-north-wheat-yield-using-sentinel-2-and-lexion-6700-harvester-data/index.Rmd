@@ -146,7 +146,7 @@ We finished with 21219 yield points as outcome variable and nine predictor varia
 
 ## Building a random forest model to predict wheat yield
 
-```{r Building neural network, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Building neural network, eval=F, echo=T, message=FALSE, warning=FALSE, paged.print=FALSE}
 ##divideing to train and test
 n <- nrow(yield_data_set)
 set.seed(13)
@@ -158,8 +158,12 @@ rf_mod<-randomForest(x=x[-testid,],y=y[-testid],importance = T,mtry = 3)
 result_train<-data.frame(Observed=yield_data_set$Yield[-testid],Predicted=rf_mod$predicted,Data="Train")
 result_test<-data.frame(Observed=yield_data_set$Yield[testid],Predicted=predict(rf_mod,x[testid,]),Data="Test")
 rf_mod_yield_result<-rbind(result_train,result_test)
-rf_mod_yield_result%>%group_by(Data)%>%summarise(rmse=caret::RMSE(Predicted,Observed),r2=caret::R2(Predicted,Observed))
 ```
+```{r Results, echo=TRUE, warning=FALSE}
+rf_mod_yield_result<-read.csv("rf_mod_yield_result.csv")
+rf_mod_yield_result%>%group_by(Data)%>%summarise(RMSE=caret::RMSE(Predicted,Observed),R2=caret::R2(Predicted,Observed))
+```
+
 
 The division of the dataset into 2/3 for training and 1/3 for testing, along with the application of a random forest model, yielded suboptimal results with a root mean square error of approximately 1.35 t/h and an R-squared value of 0.52. These results indicate a large error within a range of 1 to 10, which is not desirable.Nonetheless, zooming out, we used only one satellite imagery from January 30. Considerations for earlier and later dates need to be taken from a plant physiology and agri-technique point of view. 
 
