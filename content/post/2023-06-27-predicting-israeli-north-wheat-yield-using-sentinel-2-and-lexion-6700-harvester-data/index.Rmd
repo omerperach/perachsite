@@ -71,28 +71,6 @@ class_df_second_filter<-class_df_first_filter%>%filter(Ground.speed..km.h.>gs_me
 
 nrow(class_df_second_filter) #how many rows left follwing the second filter
 ```
-## Transforming into spatial data frame
-
-We will now transform the data set into a spatial data set.
-
-```{r Spatial data set, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE,fig.path = "static"}
-library(sf)
-library(mapview)
-library(maptiles)
-library(terra)
-library(tidyterra)
-class_clean_sf<-st_as_sf(class_df_second_filter,coords = c("GPS.longitude....","GPS.latitude...."),crs=4326)
-class_clean_vect<-class_clean_sf%>%vect()
-location_tile<-get_tiles(class_clean_sf,provider = "Esri.WorldStreetMap")
-class_clean_vect_project<-class_clean_vect%>%project(location_tile)###for plotting we need that the two spatial data wil be on the same coordinate reference systems
-map_with_yield_point<-ggplot()+geom_spatraster_rgb(data=location_tile)+
-  geom_spatvector(data=class_clean_vect_project)+
-  theme_void(
-  )
-print(map_with_yield_point)
-```
-
-These small chunk of points are basically hundreds of small points inside the wheat fields. 
 
 ## How it is all conected to precision agriculture? 
 
@@ -121,14 +99,6 @@ The following stages will be performed in the below code:
 + Showing the tile extension on the map.
 + Keeping only pixels with yield data on them. 
 
-```{r Spectral sentinel, eval=FALSE, fig.path=, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
-jan_30_sentinel_syb_tile_rgb_rast<-list.files(pattern = "TCI")%>%rast()
-sentinel_rgb_pic<-ggplot()+geom_spatraster_rgb(data=jan_30_sentinel_syb_tile_rgb_rast)+
-  geom_spatvector(data=class_clean_vect)+
-  theme_void(
-  )
-print(sentinel_rgb_pic)
-```
 As you can see, some of the points placed in diffident different tiles but we will exclude them from the analysis.
 Our mission:
 + Extract the mean yield value for every pixel.
